@@ -1,0 +1,119 @@
+// Prisma schema for MTsN 2 Kebumen
+// Run: npx prisma generate  → generates client
+// Run: npx prisma db push   → creates tables in MySQL
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+// ===== Berita (News) =====
+model Berita {
+  id       Int    @id @default(autoincrement())
+  title    String
+  excerpt  String
+  date     String
+  category String
+  image    String
+  slug     String @unique
+}
+
+// ===== Pengumuman (Announcements) =====
+model Pengumuman {
+  id       Int    @id @default(autoincrement())
+  title    String
+  date     String
+  content  String
+  priority String // 'high' | 'normal'
+}
+
+// ===== Agenda (Events) =====
+model Agenda {
+  id          Int    @id @default(autoincrement())
+  title       String
+  date        String
+  time        String
+  location    String
+  description String
+}
+
+// ===== Fasilitas (Facilities) =====
+model Fasilitas {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+  icon        String
+  image       String
+}
+
+// ===== Guru (Teachers) =====
+model Guru {
+  id       Int    @id @default(autoincrement())
+  name     String
+  position String
+  subject  String
+  image    String
+}
+
+// ===== Ekstrakurikuler (Extracurriculars) =====
+model Ekstrakurikuler {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+  icon        String
+  category    String
+}
+
+// ===== Galeri (Gallery) =====
+model Galeri {
+  id          Int    @id @default(autoincrement())
+  title       String
+  category    String
+  image       String
+  description String
+}
+
+// ===== Testimoni (Testimonials) =====
+model Testimoni {
+  id      Int    @id @default(autoincrement())
+  name    String
+  role    String
+  content String
+  avatar  String
+}
+
+// ===== Nilai Unggulan =====
+model NilaiUnggulan {
+  id          Int    @id @default(autoincrement())
+  title       String
+  description String
+  icon        String
+  highlight   Boolean @default(false)
+}
+
+// ===== Sejarah (Timeline Events) =====
+model Sejarah {
+  id          Int    @id @default(autoincrement())
+  year        String
+  title       String
+  description String
+}
+
+// ===== Program Unggulan =====
+model ProgramUnggulan {
+  id          Int    @id @default(autoincrement())
+  title       String
+  description String
+  icon        String
+}
+
+// ===== School Settings (key-value store) =====
+model SchoolSetting {
+  id    Int    @id @default(autoincrement())
+  key   String @unique
+  value String // JSON string
+}

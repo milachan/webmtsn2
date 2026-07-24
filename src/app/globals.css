@@ -1,0 +1,303 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== CSS Custom Properties ===== */
+:root {
+  --color-bg: #ffffff;
+  --color-bg-light: #f8faf8;
+  --color-bg-card: #ffffff;
+  --color-bg-section: #f0f7f2;
+  --color-primary: #166534;
+  --color-primary-light: #22c55e;
+  --color-primary-dark: #14532d;
+  --color-accent: #ca8a04;
+  --color-accent-light: #facc15;
+  --color-text: #1a1a1a;
+  --color-text-muted: #6b7280;
+  --color-text-light: #9ca3af;
+  --color-border: #e5e7eb;
+  --color-border-light: #f3f4f6;
+  --gradient-primary: linear-gradient(135deg, #2D7A4E 0%, #1E5738 100%);
+  --gradient-hero: linear-gradient(180deg, rgba(30,87,56,0.15) 0%, rgba(30,87,56,0.6) 100%);
+  --gradient-cta: radial-gradient(ellipse at center, #2D7A4E 0%, #1E5738 50%, #0F2D1A 100%);
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --shadow-card-hover: 0 20px 60px -15px rgba(0, 0, 0, 0.2);
+  --shadow-lift: 0 10px 40px -10px rgba(0, 0, 0, 0.15);
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --font-display: 'Poppins', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --transition-base: 0.3s var(--ease-out-expo);
+}
+
+/* ===== Dark Mode ===== */
+[data-theme="dark"] {
+  --color-bg: #0F1712;
+  --color-bg-light: #1A241D;
+  --color-bg-card: #1E2A21;
+  --color-bg-section: #152018;
+  --color-primary: #4CAF6E;
+  --color-primary-light: #6BCF8A;
+  --color-primary-dark: #2D7A4E;
+  --color-accent: #facc15;
+  --color-accent-light: #fde047;
+  --color-text: #E8ECEA;
+  --color-text-muted: #9CA8A0;
+  --color-text-light: #6B7A70;
+  --color-border: #2A3A2E;
+  --color-border-light: #1E2A21;
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --shadow-card-hover: 0 20px 60px -15px rgba(0, 0, 0, 0.5);
+  --shadow-lift: 0 10px 40px -10px rgba(0, 0, 0, 0.4);
+}
+
+/* ===== Base Styles ===== */
+* {
+  transition-property: background-color, border-color, color;
+  transition-duration: 0.3s;
+  transition-timing-function: var(--ease-out-expo);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-light);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-dark);
+}
+
+/* ===== Selection ===== */
+::selection {
+  background: rgba(22, 101, 52, 0.2);
+  color: var(--color-text);
+}
+
+/* ===== Islamic Ornament Pattern ===== */
+.islamic-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M30 5L55 30L30 55L5 30Z' fill='none' stroke='%23ca8a04' stroke-width='0.5' opacity='0.08'/%3E%3Cpath d='M30 15L45 30L30 45L15 30Z' fill='none' stroke='%23ca8a04' stroke-width='0.5' opacity='0.06'/%3E%3C/svg%3E");
+}
+
+.islamic-border {
+  position: relative;
+}
+
+.islamic-border::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+  opacity: 0.3;
+}
+
+.islamic-divider {
+  position: relative;
+  height: 60px;
+  overflow: hidden;
+}
+
+.islamic-divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+  opacity: 0.2;
+}
+
+.islamic-divider::after {
+  content: '✦';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--color-accent);
+  opacity: 0.3;
+  font-size: 14px;
+}
+
+/* ===== Underline grow animation ===== */
+.underline-grow {
+  position: relative;
+  text-decoration: none;
+}
+
+.underline-grow::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-primary);
+  transition: width 0.3s var(--ease-out-expo);
+}
+
+.underline-grow:hover::after {
+  width: 100%;
+}
+
+/* ===== Gradient text ===== */
+.gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ===== Glass effect ===== */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .glass {
+  background: rgba(15, 23, 18, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ===== Skeleton shimmer ===== */
+.skeleton {
+  background: linear-gradient(90deg, #e2e8f0 25%, #f8fafc 50%, #e2e8f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+[data-theme="dark"] .skeleton {
+  background: linear-gradient(90deg, #1E2A21 25%, #2A3A2E 50%, #1E2A21 75%);
+  background-size: 200% 100%;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ===== Marquee ===== */
+.marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.marquee-content {
+  display: inline-block;
+  animation: marquee 25s linear infinite;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ===== Bento Grid ===== */
+.bento-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.bento-item-large {
+  grid-row: span 2;
+}
+
+@media (max-width: 768px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bento-item-large {
+    grid-row: span 1;
+  }
+}
+
+/* ===== Reduced motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ===== Focus styles ===== */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ===== Fluid Typography ===== */
+h1 { font-size: clamp(32px, 5vw, 56px); }
+h2 { font-size: clamp(24px, 3.5vw, 40px); }
+h3 { font-size: clamp(20px, 2.5vw, 28px); }
+p { font-size: clamp(14px, 1.2vw, 16px); line-height: 1.7; }
+
+/* ===== Info Ticker Auto-Scroll ===== */
+@keyframes info-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-scroll {
+  animation: info-scroll 40s linear infinite !important;
+}
+
+.quick-info-bar:hover .animate-scroll {
+  animation-play-state: paused !important;
+}
+
+/* ===== Custom utility classes ===== */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+}
