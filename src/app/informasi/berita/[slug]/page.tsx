@@ -1,16 +1,20 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Icon from '@/components/ui/Icon';
 import Button from '@/components/ui/Button';
-import { beritaTerbaru, getGradientColor } from '@/lib/data';
+import { getGradientColor } from '@/lib/data';
+import { useStoreData, getBerita } from '@/lib/adminStore';
 
 export default function BeritaDetailPage() {
   const params = useParams();
   const slug = params?.slug as string;
-  const berita = beritaTerbaru.find((b) => b.slug === slug);
+  const beritaList = useStoreData(getBerita);
+  const berita = beritaList.find((b) => b.slug === slug);
 
   if (!berita) {
     return (
@@ -41,7 +45,7 @@ export default function BeritaDetailPage() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <Link href="/informasi/berita" className="inline-flex items-center gap-2 text-white/60 hover:text-white mb-6 transition-colors text-sm group">
+            <Link href="/informasi/berita" className="inline-flex items-center gap-2 text-white/75 hover:text-white mb-6 transition-colors text-sm group">
               <Icon name="chevron-left" size={16} className="group-hover:-translate-x-1 transition-transform" /> Kembali ke Berita
             </Link>
             <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-white/20 text-white mb-4 backdrop-blur-sm">

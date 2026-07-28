@@ -56,7 +56,7 @@ export default function CTASection() {
             <span className="text-emerald-300">MTsN 2 Kebumen</span>?
           </h2>
 
-          <p className="mt-6 text-lg text-white/70 max-w-2xl mx-auto leading-relaxed">
+          <p className="mt-6 text-lg text-white/85 max-w-2xl mx-auto leading-relaxed">
             Daftarkan putra-putri Anda sekarang juga. Kuota terbatas! 
             Jadilah bagian dari generasi unggul, berkarakter Islami, dan berprestasi.
           </p>

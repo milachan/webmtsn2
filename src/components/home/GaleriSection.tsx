@@ -8,7 +8,7 @@ import Button from '@/components/ui/Button';
 import Icon from '@/components/ui/Icon';
 import Link from 'next/link';
 import { getGradientColor } from '@/lib/data';
-import { getGaleri, GaleriItem } from '@/lib/adminStore';
+import { useStoreData, getGaleri, GaleriItem } from '@/lib/adminStore';
 
 const categories = ['Semua', 'Kegiatan', 'Fasilitas', 'Akademik'];
 
@@ -61,7 +61,7 @@ function Lightbox({ item, onClose, onPrev, onNext }: {
 export default function GaleriSection() {
   const [activeCategory, setActiveCategory] = useState('Semua');
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-  const galeriFoto = getGaleri();
+  const galeriFoto = useStoreData(getGaleri);
 
   const filtered = activeCategory === 'Semua'
     ? galeriFoto
@@ -80,7 +80,7 @@ export default function GaleriSection() {
 
   return (
     <section className="py-20 bg-emerald-50/50 dark:bg-dark-bg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="max-w-8xl 2xl:max-w-9xl mx-auto px-4 sm:px-6">
         <SectionTitle
           title="Galeri Foto"
           subtitle="Dokumentasi"

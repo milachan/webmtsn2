@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Icon from '@/components/ui/Icon';
 import AdminFormModal from './AdminFormModal';
 import {
-  getFasilitas, addFasilitas, updateFasilitas, deleteFasilitas, generateId,
+  useStoreData, getFasilitas, addFasilitas, updateFasilitas, deleteFasilitas, generateId,
   Fasilitas,
 } from '@/lib/adminStore';
 
@@ -12,33 +12,31 @@ const formFields = [
   { name: 'name', label: 'Nama Fasilitas', type: 'text' as const, placeholder: 'Masukkan nama fasilitas', required: true },
   { name: 'description', label: 'Deskripsi', type: 'textarea' as const, placeholder: 'Tulis deskripsi fasilitas', required: true, rows: 2 },
   { name: 'icon', label: 'Nama Icon', type: 'text' as const, placeholder: 'Contoh: building-2, flask-conical, monitor', required: true },
-  { name: 'image', label: 'Path Gambar', type: 'text' as const, placeholder: '/images/fasilitas-kelas.jpg', required: true },
+  { name: 'image', label: 'Gambar Fasilitas', type: 'image' as const, placeholder: 'Upload gambar fasilitas', required: true, imageWidth: 800, imageHeight: 600 },
 ];
 
 export default function AdminFasilitas() {
-  const [items, setItems] = useState<Fasilitas[]>([]);
+  const items = useStoreData(getFasilitas);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Fasilitas | null>(null);
 
-  useEffect(() => { setItems(getFasilitas()); }, []);
-
-  const refresh = () => setItems(getFasilitas());
-
-  const handleSave = (data: Record<string, string>) => {
+  const handleSave = async (data: Record<string, string>): Promise<boolean> => {
     if (editingItem) {
-      updateFasilitas(editingItem.id, data);
+      const ok = await updateFasilitas(editingItem.id, data);
+      if (!ok) return false;
     } else {
-      addFasilitas({
+      const ok = await addFasilitas({
         id: generateId(),
         name: data.name,
         description: data.description,
         icon: data.icon,
         image: data.image,
       });
+      if (!ok) return false;
     }
     setEditingItem(null);
     setModalOpen(false);
-    refresh();
+    return true;
   };
 
   const handleEdit = (item: Fasilitas) => {
@@ -49,7 +47,6 @@ export default function AdminFasilitas() {
   const handleDelete = (id: number) => {
     if (confirm('Yakin ingin menghapus fasilitas ini?')) {
       deleteFasilitas(id);
-      refresh();
     }
   };
 
@@ -79,9 +76,9 @@ export default function AdminFasilitas() {
                   <p className="text-xs text-gray-400 dark:text-dark-text-muted mt-0.5 line-clamp-2">{item.description}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-1 ml-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"><button onClick={() => handleEdit(item)} className="p-1.5 rounded-lg text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors">
+              <div className="flex items-center gap-1 ml-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"><button onClick={() => handleEdit(item)} className="p-1.5 rounded-lg text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors" aria-label="Edit fasilitas">
                     <Icon name="pen-tool" size={14} />
-                </button><button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                </button><button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors" aria-label="Hapus fasilitas">
                     <Icon name="trash-2" size={14} />
                 </button>
               </div>

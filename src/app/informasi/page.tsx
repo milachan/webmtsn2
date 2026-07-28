@@ -11,7 +11,7 @@ export default function InformasiPage() {
       <section className="relative py-20 bg-gradient-to-br from-emerald-900 via-emerald-800 to-green-900 overflow-hidden">
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'60\' height=\'60\' viewBox=\'0 0 60 60\'%3E%3Cpath d=\'M30 2L58 30L30 58L2 30Z\' fill=\'none\' stroke=\'white\' stroke-width=\'0.5\'/%3E%3C/svg%3E")' }} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center">
+        <div className="relative z-10 max-w-8xl 2xl:max-w-9xl mx-auto px-4 sm:px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-sm text-white/80 text-xs font-medium mb-6">
               <Icon name="info" size={14} /> Pusat Informasi Madrasah
@@ -35,6 +35,7 @@ export default function InformasiPage() {
               { href: '/informasi/berita', label: 'Berita', icon: 'book-open', desc: 'Berita dan artikel terbaru seputar kegiatan madrasah', color: 'from-emerald-500 to-emerald-700', gradient: 'from-emerald-50 to-emerald-100 dark:from-emerald-500/10 dark:to-emerald-600/5' },
               { href: '/informasi/agenda', label: 'Agenda', icon: 'calendar', desc: 'Jadwal kegiatan dan acara madrasah', color: 'from-blue-500 to-blue-700', gradient: 'from-blue-50 to-blue-100 dark:from-blue-500/10 dark:to-blue-600/5' },
               { href: '/informasi/galeri', label: 'Galeri', icon: 'image', desc: 'Dokumentasi foto kegiatan madrasah', color: 'from-purple-500 to-purple-700', gradient: 'from-purple-50 to-purple-100 dark:from-purple-500/10 dark:to-purple-600/5' },
+              { href: '/informasi/download', label: 'Download', icon: 'arrow-down', desc: 'Unduh dokumen-dokumen penting madrasah', color: 'from-rose-500 to-rose-700', gradient: 'from-rose-50 to-rose-100 dark:from-rose-500/10 dark:to-rose-600/5' },
             ].map((link, i) => (
               <motion.div key={link.href} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
                 <Link href={link.href} className="group block bg-white dark:bg-dark-card rounded-2xl p-7 border border-gray-100 dark:border-dark-border hover:shadow-card-hover hover:-translate-y-1.5 transition-all duration-300 relative overflow-hidden">

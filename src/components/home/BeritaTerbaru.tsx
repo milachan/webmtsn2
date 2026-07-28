@@ -8,24 +8,25 @@ import Button from '@/components/ui/Button';
 import Icon from '@/components/ui/Icon';
 import Link from 'next/link';
 import { getGradientColor } from '@/lib/data';
-import { getBerita } from '@/lib/adminStore';
+import { useStoreData, getBerita } from '@/lib/adminStore';
 
 export default function BeritaTerbaru() {
+  const beritaList = useStoreData(getBerita);
   return (
     <section className="py-20 bg-white dark:bg-dark-bg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="max-w-8xl 2xl:max-w-9xl mx-auto px-4 sm:px-6">
         <SectionTitle
           title="Berita & Kegiatan Terbaru"
           subtitle="Informasi"
         />
 
         <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-          {getBerita().slice(0, 6).map((berita) => (
+          {beritaList.slice(0, 6).map((berita) => (
             <StaggerItem key={berita.id}>
               <Link href={`/informasi/berita/${berita.slug}`}>
                 <Card hover="lift" className="group h-full">
                   {/* Image */}
-                  <div className="relative h-48 overflow-hidden bg-gradient-to-br ${getGradientColor(berita.id)}">
+                  <div className={`relative h-48 overflow-hidden bg-gradient-to-br ${getGradientColor(berita.id)}`}>
                     <div className="absolute inset-0 flex items-center justify-center opacity-30 group-hover:scale-110 transition-transform duration-500">
                       <Icon name="image" size={48} className="text-white" />
                     </div>

@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Icon from '@/components/ui/Icon';
 import AdminFormModal from './AdminFormModal';
 import {
-  getPengumuman, addPengumuman, updatePengumuman, deletePengumuman, generateId,
+  useStoreData, getPengumuman, addPengumuman, updatePengumuman, deletePengumuman, generateId,
   Pengumuman,
 } from '@/lib/adminStore';
 
@@ -19,29 +19,27 @@ const formFields = [
 ];
 
 export default function AdminPengumuman() {
-  const [items, setItems] = useState<Pengumuman[]>([]);
+  const items = useStoreData(getPengumuman);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Pengumuman | null>(null);
 
-  useEffect(() => { setItems(getPengumuman()); }, []);
-
-  const refresh = () => setItems(getPengumuman());
-
-  const handleSave = (data: Record<string, string>) => {
+  const handleSave = async (data: Record<string, string>): Promise<boolean> => {
     if (editingItem) {
-      updatePengumuman(editingItem.id, data);
+      const ok = await updatePengumuman(editingItem.id, data);
+      if (!ok) return false;
     } else {
-      addPengumuman({
+      const ok = await addPengumuman({
         id: generateId(),
         title: data.title,
         date: data.date,
         content: data.content,
         priority: data.priority as 'high' | 'normal',
       });
+      if (!ok) return false;
     }
     setEditingItem(null);
     setModalOpen(false);
-    refresh();
+    return true;
   };
 
   const handleEdit = (item: Pengumuman) => {
@@ -52,7 +50,6 @@ export default function AdminPengumuman() {
   const handleDelete = (id: number) => {
     if (confirm('Yakin ingin menghapus pengumuman ini?')) {
       deletePengumuman(id);
-      refresh();
     }
   };
 
@@ -101,10 +98,10 @@ export default function AdminPengumuman() {
                   <td className="px-4 py-3.5 text-gray-500 dark:text-dark-text-muted hidden sm:table-cell">{item.date}</td>
                   <td className="px-4 py-3.5 text-right">
                     <div className="flex items-center justify-end gap-1">
-                      <button onClick={() => handleEdit(item)} className="p-2 rounded-lg text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors" title="Edit">
+                      <button onClick={() => handleEdit(item)} className="p-2 rounded-lg text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors" title="Edit" aria-label="Edit pengumuman">
                         <Icon name="pen-tool" size={15} />
                       </button>
-                      <button onClick={() => handleDelete(item.id)} className="p-2 rounded-lg text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors" title="Hapus">
+                      <button onClick={() => handleDelete(item.id)} className="p-2 rounded-lg text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors" title="Hapus" aria-label="Hapus pengumuman">
                         <Icon name="trash-2" size={15} />
                       </button>
                     </div>

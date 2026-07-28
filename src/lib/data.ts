@@ -50,6 +50,7 @@ export interface Statistik {
 }
 
 export interface TimelineEvent {
+  id: number;
   year: string;
   title: string;
   description: string;
@@ -88,7 +89,115 @@ export interface Agenda {
   description: string;
 }
 
+export interface Prestasi {
+  id: number;
+  tahun: string;
+  bidang: string;
+  prestasi: string;
+  tingkat: string;
+}
+
+export interface StrukturPosisi {
+  id: number;
+  level: string;
+  name: string;
+  icon: string;
+  color: string;
+  type: 'kepala' | 'waka' | 'guru';
+}
+
+export interface StrukturGuruBidang {
+  id: number;
+  bidang: string;
+  count: string;
+}
+
+export interface KurikulumKategori {
+  id: number;
+  title: string;
+  items: string[];
+}
+
+export interface ProgramUnggulan {
+  id: number;
+  title: string;
+  description: string;
+  icon: string;
+}
+
+export interface HeroSlide {
+  id: number;
+  image: string;
+  title: string;
+  subtitle: string;
+  active: boolean;
+}
+
+export interface SocialLink {
+  id: number;
+  platform: 'whatsapp' | 'youtube' | 'instagram' | 'tiktok' | 'facebook' | 'telepon';
+  label: string;
+  url: string;
+  icon: string;
+  active: boolean;
+}
+
 // ===== Data =====
+
+export const defaultStrukturOrganisasi = {
+  positions: [
+    { id: 1, level: 'Kepala Madrasah', name: 'Dr. H. Ahmad Fauzi, S.Ag., M.Pd.', icon: 'graduation-cap', color: 'from-emerald-600 to-emerald-900', type: 'kepala' },
+    { id: 2, level: 'Waka Kurikulum', name: 'Drs. H. Slamet Riyadi', icon: 'book-open', color: 'from-emerald-500 to-emerald-700', type: 'waka' },
+    { id: 3, level: 'Waka Kesiswaan', name: 'Hj. Siti Nurjanah, S.Pd., M.Pd.', icon: 'users', color: 'from-emerald-500 to-emerald-700', type: 'waka' },
+    { id: 4, level: 'Waka Sarpras', name: 'H. Ali Maksum, S.Pd.I., M.S.I.', icon: 'building-2', color: 'from-emerald-500 to-emerald-700', type: 'waka' },
+    { id: 5, level: 'Waka Humas', name: 'Dra. Hj. Masruroh', icon: 'message-square', color: 'from-emerald-500 to-emerald-700', type: 'waka' },
+  ],
+  guruList: [
+    { id: 1, bidang: 'Guru Mata Pelajaran', count: '35 Guru' },
+    { id: 2, bidang: 'Wali Kelas', count: '27 Guru' },
+    { id: 3, bidang: 'Pembina Ekstrakurikuler', count: '18 Pembina' },
+    { id: 4, bidang: 'Tenaga Administrasi', count: '8 Tendik' },
+    { id: 5, bidang: 'Pustakawan', count: '2 Pustakawan' },
+    { id: 6, bidang: 'Laboran', count: '3 Laboran' },
+  ],
+};
+
+export const defaultKurikulumData: KurikulumKategori[] = [
+  { id: 1, title: 'Kurikulum Merdeka', items: ['Pembelajaran berbasis projek (P5RA)', 'Fleksibilitas guru dalam merancang pembelajaran', 'Pengembangan profil pelajar Pancasila dan Rahmatan lil Alamin', 'Asesmen formatif dan sumatif berbasis kompetensi'] },
+  { id: 2, title: 'Kekhasan Madrasah', items: ['Al-Qur\'an Hadits', 'Akidah Akhlak', 'Fiqih', 'Sejarah Kebudayaan Islam (SKI)', 'Bahasa Arab'] },
+  { id: 3, title: 'Muatan Nasional', items: ['Pendidikan Pancasila', 'Bahasa Indonesia', 'Matematika', 'IPA Terpadu', 'IPS Terpadu'] },
+  { id: 4, title: 'Muatan Tambahan', items: ['Tahfidz Qur\'an', 'Bahasa Inggris Intensif', 'Kitab Kuning Dasar', 'Praktik Ibadah', 'Keterampilan Digital'] },
+];
+
+export const prestasiData: Prestasi[] = [
+  { id: 1, tahun: '2024', bidang: 'Olimpiade Sains', prestasi: 'Juara 1 OSN Tingkat Kabupaten', tingkat: 'Kabupaten' },
+  { id: 2, tahun: '2024', bidang: 'Olimpiade Sains', prestasi: 'Medali Emas OSN Matematika', tingkat: 'Provinsi' },
+  { id: 3, tahun: '2024', bidang: 'Olahraga', prestasi: 'Juara 1 Futsal Tingkat Kabupaten', tingkat: 'Kabupaten' },
+  { id: 4, tahun: '2024', bidang: 'Keagamaan', prestasi: 'Juara 1 MHQ Tingkat Provinsi', tingkat: 'Provinsi' },
+  { id: 5, tahun: '2024', bidang: 'Seni', prestasi: 'Juara 2 Pidato Bahasa Arab', tingkat: 'Kabupaten' },
+  { id: 6, tahun: '2023', bidang: 'Akademik', prestasi: 'Nilai UN Tertinggi se-Kabupaten', tingkat: 'Kabupaten' },
+  { id: 7, tahun: '2023', bidang: 'Olahraga', prestasi: 'Juara 3 Basket Putri', tingkat: 'Kabupaten' },
+  { id: 8, tahun: '2023', bidang: 'Keagamaan', prestasi: 'Juara Harapan 1 Musabaqah Tilawatil Qur\'an', tingkat: 'Provinsi' },
+  { id: 9, tahun: '2023', bidang: 'Sains', prestasi: 'Finalis Olimpiade Sains Nasional', tingkat: 'Nasional' },
+  { id: 10, tahun: '2024', bidang: 'Ekstrakurikuler', prestasi: 'Juara 1 Pramuka Tingkat Kabupaten', tingkat: 'Kabupaten' },
+  { id: 11, tahun: '2024', bidang: 'Akademik', prestasi: '10 Besar Nilai ASPD Terbaik', tingkat: 'Kabupaten' },
+  { id: 12, tahun: '2024', bidang: 'Seni', prestasi: 'Juara 2 Kaligrafi Islam', tingkat: 'Provinsi' },
+];
+
+export const defaultHeroSlides: HeroSlide[] = [
+  { id: 1, image: '', title: 'Mendidik Generasi Islami Unggul', subtitle: 'Madrasah unggulan di Kebumen yang mencetak generasi beriman, berilmu, berkarakter mulia, dan siap menghadapi tantangan global dengan prestasi gemilang.', active: true },
+  { id: 2, image: '', title: 'Berkarakter & Berprestasi', subtitle: 'Membentuk siswa berakhlak mulia, berprestasi akademik dan non-akademik di tingkat kabupaten, provinsi, dan nasional.', active: true },
+  { id: 3, image: '', title: 'Madrasah Mandiri Berprestasi', subtitle: 'Menjadi pusat pengembangan kurikulum merdeka dan madrasah percontohan di wilayah Kedu Selatan.', active: true },
+];
+
+export const defaultSocialLinks: SocialLink[] = [
+  { id: 1, platform: 'whatsapp', label: 'WhatsApp', url: 'https://wa.me/6281234567890?text=Assalamualaikum%2C%20saya%20ingin%20bertanya%20tentang%20MTs%20Negeri%202%20Kebumen.', icon: 'message-circle', active: true },
+  { id: 2, platform: 'youtube', label: 'YouTube', url: 'https://youtube.com/@mtsn2kebumen', icon: 'film', active: true },
+  { id: 3, platform: 'instagram', label: 'Instagram', url: 'https://instagram.com/mtsn2kebumen', icon: 'camera', active: true },
+  { id: 4, platform: 'tiktok', label: 'TikTok', url: 'https://tiktok.com/@mtsn2kebumen', icon: 'music-2', active: true },
+  { id: 5, platform: 'facebook', label: 'Facebook', url: 'https://facebook.com/mtsn2kebumen', icon: 'bookmark', active: true },
+  { id: 6, platform: 'telepon', label: 'Telepon', url: 'tel:+62287381234', icon: 'phone-call', active: true },
+];
 
 export const schoolData = {
   name: 'MTs Negeri 2 Kebumen',
@@ -99,6 +208,7 @@ export const schoolData = {
   phone: '(0287) 381234',
   email: 'info@mtsn2kebumen.sch.id',
   website: 'www.mtsn2kebumen.sch.id',
+  logo: '', // path ke file logo (kosong = pakai inisial "M" default)
   social: {
     facebook: 'mtsn2kebumen',
     instagram: '@mtsn2kebumen',
@@ -133,14 +243,14 @@ Wassalamu'alaikum Warahmatullahi Wabarakatuh.`,
 };
 
 export const sejarahMadrasah: TimelineEvent[] = [
-  { year: '1995', title: 'Pendirian Madrasah', description: 'MTs Negeri 2 Kebumen didirikan sebagai Madrasah Tsanawiyah Negeri yang berlokasi di Kecamatan Karanganyar, Kabupaten Kebumen.' },
-  { year: '2000', title: 'Akreditasi A', description: 'Meraih akreditasi A (Unggul) dari Badan Akreditasi Nasional Sekolah/Madrasah (BAN-S/M) untuk pertama kalinya.' },
-  { year: '2005', title: 'Laboratorium Komputer', description: 'Pembangunan laboratorium komputer modern untuk mendukung pembelajaran TIK dan multimedia.' },
-  { year: '2010', title: 'Madrasah Adiwiyata', description: 'Ditetapkan sebagai Madrasah Adiwiyata (sekolah peduli lingkungan) tingkat provinsi Jawa Tengah.' },
-  { year: '2015', title: 'Program Unggulan', description: 'Meluncurkan program unggulan Tahfidz Qur\'an dan Kelas Sains Terpadu.' },
-  { year: '2018', title: 'Prestasi Nasional', description: 'Siswa-siswi meraih medali emas Olimpiade Sains Nasional (OSN) dan kompetisi keagamaan tingkat nasional.' },
-  { year: '2020', title: 'Digital Learning', description: 'Implementasi pembelajaran digital berbasis blended learning dan pengembangan e-learning madrasah.' },
-  { year: '2024', title: 'Madrasah Mandiri Berprestasi', description: 'Ditetapkan sebagai Madrasah Mandiri Berprestasi dan pusat pengembangan kurikulum merdeka di wilayah Kedu Selatan.' },
+  { id: 1, year: '1995', title: 'Pendirian Madrasah', description: 'MTs Negeri 2 Kebumen didirikan sebagai Madrasah Tsanawiyah Negeri yang berlokasi di Kecamatan Karanganyar, Kabupaten Kebumen.' },
+  { id: 2, year: '2000', title: 'Akreditasi A', description: 'Meraih akreditasi A (Unggul) dari Badan Akreditasi Nasional Sekolah/Madrasah (BAN-S/M) untuk pertama kalinya.' },
+  { id: 3, year: '2005', title: 'Laboratorium Komputer', description: 'Pembangunan laboratorium komputer modern untuk mendukung pembelajaran TIK dan multimedia.' },
+  { id: 4, year: '2010', title: 'Madrasah Adiwiyata', description: 'Ditetapkan sebagai Madrasah Adiwiyata (sekolah peduli lingkungan) tingkat provinsi Jawa Tengah.' },
+  { id: 5, year: '2015', title: 'Program Unggulan', description: 'Meluncurkan program unggulan Tahfidz Qur\'an dan Kelas Sains Terpadu.' },
+  { id: 6, year: '2018', title: 'Prestasi Nasional', description: 'Siswa-siswi meraih medali emas Olimpiade Sains Nasional (OSN) dan kompetisi keagamaan tingkat nasional.' },
+  { id: 7, year: '2020', title: 'Digital Learning', description: 'Implementasi pembelajaran digital berbasis blended learning dan pengembangan e-learning madrasah.' },
+  { id: 8, year: '2024', title: 'Madrasah Mandiri Berprestasi', description: 'Ditetapkan sebagai Madrasah Mandiri Berprestasi dan pusat pengembangan kurikulum merdeka di wilayah Kedu Selatan.' },
 ];
 
 export const visiMisi = {
@@ -189,42 +299,94 @@ export const nilaiUnggulan: NilaiUnggulan[] = [
   },
 ];
 
+// ===== PMB Settings =====
+export interface PmbSettings {
+  mode: 'internal' | 'redirect';
+  redirectUrl: string;
+  title: string;
+  description: string;
+  badgeText: string;
+  infoCards: { icon: string; label: string; value: string }[];
+  steps: { number: number; title: string; description: string }[];
+  requirements: string[];
+  contactTitle: string;
+  contactDescription: string;
+  contacts: { icon: string; label: string; value: string }[];
+  ctaText: string;
+}
+
+export const defaultPmbSettings: PmbSettings = {
+  mode: 'internal',
+  redirectUrl: 'https://pmb.mtsnegeri2kebumen.sch.id',
+  title: 'PMB MTs Negeri 2 Kebumen',
+  description: 'Pendaftaran Peserta Didik Baru. Daftarkan putra-putri Anda menjadi bagian dari keluarga besar MTsN 2 Kebumen.',
+  badgeText: 'Tahun Ajaran 2026/2027',
+  infoCards: [
+    { icon: 'calendar', label: 'Pendaftaran', value: '1-31 Agustus 2026' },
+    { icon: 'users', label: 'Kuota', value: '280 Siswa' },
+    { icon: 'graduation-cap', label: 'Biaya Pendaftaran', value: 'Gratis (Rp 0)' },
+  ],
+  steps: [
+    { number: 1, title: 'Registrasi Online', description: 'Daftar melalui website resmi atau datang langsung ke madrasah' },
+    { number: 2, title: 'Verifikasi Berkas', description: 'Serahkan berkas persyaratan untuk diverifikasi oleh panitia' },
+    { number: 3, title: 'Tes Seleksi', description: 'Ikuti tes akademik dan wawancara yang telah dijadwalkan' },
+    { number: 4, title: 'Pengumuman', description: 'Hasil seleksi diumumkan melalui website dan papan pengumuman' },
+    { number: 5, title: 'Daftar Ulang', description: 'Lakukan daftar ulang dan pembayaran administrasi' },
+  ],
+  requirements: [
+    'Fotokopi Akta Kelahiran (2 lembar)',
+    'Fotokopi Kartu Keluarga (2 lembar)',
+    'Pas foto 3x4 (4 lembar, background merah)',
+    'Fotokopi Raport SD/MI semester 1-5',
+    'Surat Keterangan Dokter',
+    'Mengisi formulir pendaftaran',
+  ],
+  contactTitle: 'Hubungi Panitia PMB',
+  contactDescription: 'Jika ada pertanyaan seputar pendaftaran, silakan hubungi panitia PMB melalui kontak di bawah ini:',
+  contacts: [
+    { icon: 'phone', label: 'Telepon', value: '(0287) 381234' },
+    { icon: 'mail', label: 'Email', value: 'pmb@mtsn2kebumen.sch.id' },
+    { icon: 'map-pin', label: 'Alamat', value: 'Kantor MTsN 2 Kebumen (Ruang Panitia PMB)' },
+  ],
+  ctaText: 'Daftar Sekarang',
+};
+
 export const statistikMadrasah: Statistik[] = [
-  { label: 'Siswa Aktif', value: 840, icon: 'users' },
+  { label: 'Siswa Aktif', value: 840, suffix: '+', icon: 'users' },
   { label: 'Guru & Tendik', value: 62, icon: 'graduation-cap' },
+  { label: 'Ekstrakurikuler', value: 18, icon: 'compass' },
+  { label: 'Prestasi (2024)', value: 45, suffix: '+', icon: 'trophy' },
   { label: 'Ruang Kelas', value: 27, icon: 'building' },
-  { label: 'Prestasi (2024)', value: 45, icon: 'trophy' },
-  { label: 'Ekstrakurikuler', value: 18, icon: 'star' },
 ];
 
 export const fasilitas: Fasilitas[] = [
-  { id: 1, name: 'Ruang Kelas Ber-AC', description: '27 ruang kelas nyaman dengan pendingin udara, LCD proyektor, dan akses internet', icon: 'building-2', image: '/images/fasilitas-kelas.jpg' },
-  { id: 2, name: 'Laboratorium IPA', description: 'Laboratorium Fisika, Kimia, dan Biologi lengkap dengan alat peraga modern', icon: 'flask-conical', image: '/images/fasilitas-lab.jpg' },
-  { id: 3, name: 'Laboratorium Komputer', description: '40 unit komputer dengan akses internet broadband untuk pembelajaran TIK', icon: 'monitor', image: '/images/fasilitas-komputer.jpg' },
-  { id: 4, name: 'Perpustakaan Digital', description: 'Perpustakaan dengan koleksi 5.000+ buku dan akses e-book serta jurnal online', icon: 'library', image: '/images/fasilitas-perpus.jpg' },
-  { id: 5, name: 'Musholla', description: 'Musholla luas dengan kapasitas 500 jamaah untuk ibadah dan kegiatan keagamaan', icon: 'mosque', image: '/images/fasilitas-musholla.jpg' },
-  { id: 6, name: 'Lapangan Olahraga', description: 'Lapangan futsal, basket, voli, dan atletik untuk pengembangan bakat olahraga', icon: 'football', image: '/images/fasilitas-lapangan.jpg' },
+  { id: 1, name: 'Ruang Kelas Ber-AC', description: '27 ruang kelas nyaman dengan pendingin udara, LCD proyektor, dan akses internet', icon: 'building-2', image: '/images/fasilitas-kelas.svg' },
+  { id: 2, name: 'Laboratorium IPA', description: 'Laboratorium Fisika, Kimia, dan Biologi lengkap dengan alat peraga modern', icon: 'flask-conical', image: '/images/fasilitas-lab.svg' },
+  { id: 3, name: 'Laboratorium Komputer', description: '40 unit komputer dengan akses internet broadband untuk pembelajaran TIK', icon: 'monitor', image: '/images/fasilitas-komputer.svg' },
+  { id: 4, name: 'Perpustakaan Digital', description: 'Perpustakaan dengan koleksi 5.000+ buku dan akses e-book serta jurnal online', icon: 'library', image: '/images/fasilitas-perpus.svg' },
+  { id: 5, name: 'Musholla', description: 'Musholla luas dengan kapasitas 500 jamaah untuk ibadah dan kegiatan keagamaan', icon: 'mosque', image: '/images/fasilitas-musholla.svg' },
+  { id: 6, name: 'Lapangan Olahraga', description: 'Lapangan futsal, basket, voli, dan atletik untuk pengembangan bakat olahraga', icon: 'football', image: '/images/fasilitas-lapangan.svg' },
 ];
 
 export const beritaTerbaru: Berita[] = [
-  { id: 1, title: 'MTsN 2 Kebumen Juara Umum Olimpiade Sains Madrasah Tingkat Kabupaten', excerpt: 'Tim Olimpiade Sains Madrasah Tsanawiyah Negeri 2 Kebumen berhasil meraih juara umum dengan membawa pulang 5 medali emas dan 3 perak.', date: '15 Juli 2026', category: 'Prestasi', image: '/images/berita-1.jpg', slug: 'juara-olimpiade-sains' },
-  { id: 2, title: 'Kegiatan Pesantren Kilat Ramadhan 1447 H', excerpt: 'Pesantren kilat diikuti oleh seluruh siswa kelas 7, 8, dan 9 dengan kegiatan tadarus, kajian kitab kuning, dan praktik ibadah.', date: '10 Juli 2026', category: 'Kegiatan', image: '/images/berita-2.jpg', slug: 'pesantren-kilat' },
-  { id: 3, title: 'PMB Tahun Ajaran 2026/2027 Resmi Dibuka', excerpt: 'Pendaftaran peserta didik baru MTs Negeri 2 Kebumen dibuka mulai 1 Agustus 2026. Kuota terbatas 280 siswa.', date: '5 Juli 2026', category: 'Pengumuman', image: '/images/berita-3.jpg', slug: 'pmb-dibuka' },
-  { id: 4, title: 'Workshop Implementasi Kurikulum Merdeka bagi Guru', excerpt: 'Seluruh guru MTsN 2 Kebumen mengikuti workshop implementasi Kurikulum Merdeka yang diselenggarakan oleh Kemenag Kab. Kebumen.', date: '28 Juni 2026', category: 'Kegiatan', image: '/images/berita-4.jpg', slug: 'workshop-kurikulum-merdeka' },
-  { id: 5, title: 'Tim Futsal MTsN 2 Kebumen Wakili Kabupaten ke Tingkat Provinsi', excerpt: 'Setelah menjuarai kompetisi futsal tingkat kabupaten, tim futsal MTsN 2 Kebumen bersiap ke tingkat provinsi Jawa Tengah.', date: '20 Juni 2026', category: 'Prestasi', image: '/images/berita-5.jpg', slug: 'futsal-provinsi' },
-  { id: 6, title: 'Kegiatan Bakti Sosial dan Penghijauan Lingkungan', excerpt: 'OSIS MTsN 2 Kebumen mengadakan bakti sosial dan penanaman 100 pohon di area madrasah dan desa sekitar.', date: '15 Juni 2026', category: 'Kegiatan', image: '/images/berita-6.jpg', slug: 'bakti-sosial' },
+  { id: 1, title: 'MTsN 2 Kebumen Juara Umum Olimpiade Sains Madrasah Tingkat Kabupaten', excerpt: 'Tim Olimpiade Sains Madrasah Tsanawiyah Negeri 2 Kebumen berhasil meraih juara umum dengan membawa pulang 5 medali emas dan 3 perak.', date: '15 Juli 2026', category: 'Prestasi', image: '/images/berita-1.svg', slug: 'juara-olimpiade-sains' },
+  { id: 2, title: 'Kegiatan Pesantren Kilat Ramadhan 1447 H', excerpt: 'Pesantren kilat diikuti oleh seluruh siswa kelas 7, 8, dan 9 dengan kegiatan tadarus, kajian kitab kuning, dan praktik ibadah.', date: '10 Juli 2026', category: 'Kegiatan', image: '/images/berita-2.svg', slug: 'pesantren-kilat' },
+  { id: 3, title: 'PMB Tahun Ajaran 2026/2027 Resmi Dibuka', excerpt: 'Pendaftaran peserta didik baru MTs Negeri 2 Kebumen dibuka mulai 1 Agustus 2026. Kuota terbatas 280 siswa.', date: '5 Juli 2026', category: 'Pengumuman', image: '/images/berita-3.svg', slug: 'pmb-dibuka' },
+  { id: 4, title: 'Workshop Implementasi Kurikulum Merdeka bagi Guru', excerpt: 'Seluruh guru MTsN 2 Kebumen mengikuti workshop implementasi Kurikulum Merdeka yang diselenggarakan oleh Kemenag Kab. Kebumen.', date: '28 Juni 2026', category: 'Kegiatan', image: '/images/berita-4.svg', slug: 'workshop-kurikulum-merdeka' },
+  { id: 5, title: 'Tim Futsal MTsN 2 Kebumen Wakili Kabupaten ke Tingkat Provinsi', excerpt: 'Setelah menjuarai kompetisi futsal tingkat kabupaten, tim futsal MTsN 2 Kebumen bersiap ke tingkat provinsi Jawa Tengah.', date: '20 Juni 2026', category: 'Prestasi', image: '/images/berita-5.svg', slug: 'futsal-provinsi' },
+  { id: 6, title: 'Kegiatan Bakti Sosial dan Penghijauan Lingkungan', excerpt: 'OSIS MTsN 2 Kebumen mengadakan bakti sosial dan penanaman 100 pohon di area madrasah dan desa sekitar.', date: '15 Juni 2026', category: 'Kegiatan', image: '/images/berita-6.svg', slug: 'bakti-sosial' },
 ];
 
 export const galeriFoto: GaleriItem[] = [
-  { id: 1, title: 'Upacara Bendera', category: 'Kegiatan', image: '/images/galeri-1.jpg', description: 'Upacara bendera setiap Senin pagi' },
-  { id: 2, title: 'Laboratorium Komputer', category: 'Fasilitas', image: '/images/galeri-2.jpg', description: 'Laboratorium komputer modern' },
-  { id: 3, title: 'Kegiatan Tahfidz', category: 'Akademik', image: '/images/galeri-3.jpg', description: 'Siswa menghafal Al-Qur\'an' },
-  { id: 4, title: 'Peringatan Isra Mi\'raj', category: 'Kegiatan', image: '/images/galeri-4.jpg', description: 'Peringatan Isra Mi\'raj Nabi Muhammad SAW' },
-  { id: 5, title: 'Perpustakaan Digital', category: 'Fasilitas', image: '/images/galeri-5.jpg', description: 'Perpustakaan dengan akses digital' },
-  { id: 6, title: 'Lomba Pidato Bahasa Arab', category: 'Akademik', image: '/images/galeri-6.jpg', description: 'Lomba pidato bahasa Arab' },
-  { id: 7, title: 'Kegiatan Olahraga', category: 'Kegiatan', image: '/images/galeri-7.jpg', description: 'Olahraga bersama di lapangan' },
-  { id: 8, title: 'Musholla Madrasah', category: 'Fasilitas', image: '/images/galeri-8.jpg', description: 'Musholla kapasitas 500 jamaah' },
-  { id: 9, title: 'Kelas Sains Terpadu', category: 'Akademik', image: '/images/galeri-9.jpg', description: 'Praktikum di laboratorium sains' },
+  { id: 1, title: 'Upacara Bendera', category: 'Kegiatan', image: '/images/galeri-1.svg', description: 'Upacara bendera setiap Senin pagi' },
+  { id: 2, title: 'Laboratorium Komputer', category: 'Fasilitas', image: '/images/galeri-2.svg', description: 'Laboratorium komputer modern' },
+  { id: 3, title: 'Kegiatan Tahfidz', category: 'Akademik', image: '/images/galeri-3.svg', description: 'Siswa menghafal Al-Qur\'an' },
+  { id: 4, title: 'Peringatan Isra Mi\'raj', category: 'Kegiatan', image: '/images/galeri-4.svg', description: 'Peringatan Isra Mi\'raj Nabi Muhammad SAW' },
+  { id: 5, title: 'Perpustakaan Digital', category: 'Fasilitas', image: '/images/galeri-5.svg', description: 'Perpustakaan dengan akses digital' },
+  { id: 6, title: 'Lomba Pidato Bahasa Arab', category: 'Akademik', image: '/images/galeri-6.svg', description: 'Lomba pidato bahasa Arab' },
+  { id: 7, title: 'Kegiatan Olahraga', category: 'Kegiatan', image: '/images/galeri-7.svg', description: 'Olahraga bersama di lapangan' },
+  { id: 8, title: 'Musholla Madrasah', category: 'Fasilitas', image: '/images/galeri-8.svg', description: 'Musholla kapasitas 500 jamaah' },
+  { id: 9, title: 'Kelas Sains Terpadu', category: 'Akademik', image: '/images/galeri-9.svg', description: 'Praktikum di laboratorium sains' },
 ];
 
 export const testimoni: Testimoni[] = [
@@ -291,11 +453,54 @@ export const tataTertib = {
   sanksi: 'Pelanggaran terhadap tata tertib akan dikenakan sanksi bertahap mulai dari teguran lisan, teguran tertulis, panggilan orang tua, hingga skorsing atau dikembalikan kepada orang tua sesuai tingkat pelanggaran.',
 };
 
-export const programUnggulan = [
-  { title: 'Kelas Tahfidz', description: 'Program intensif hafalan Al-Qur\'an dengan target 3 juz (kelas 7-9). Dibimbing oleh guru hafidz/hafidzah bersanad. Terintegrasi dengan kurikulum reguler.', icon: 'book-open' },
-  { title: 'Kelas Sains Terpadu', description: 'Program penguatan sains dengan metode STEM (Science, Technology, Engineering, Mathematics). Siswa mengikuti olimpiade sains dan penelitian.', icon: 'atom' },
-  { title: 'Kelas Bilingual', description: 'Program bilingual (Arab dan Inggris) untuk mata pelajaran tertentu. Mempersiapkan siswa melanjutkan studi di sekolah unggulan dalam/luar negeri.', icon: 'languages' },
-  { title: 'Kelas Digital', description: 'Program penguasaan literasi digital, coding, desain grafis, dan multimedia. Dilengkapi laboratorium komputer dan studio multimedia.', icon: 'monitor' },
+export const programUnggulan: ProgramUnggulan[] = [
+  { id: 1, title: 'Kelas Tahfidz', description: 'Program intensif hafalan Al-Qur\'an dengan target 3 juz (kelas 7-9). Dibimbing oleh guru hafidz/hafidzah bersanad. Terintegrasi dengan kurikulum reguler.', icon: 'book-open' },
+  { id: 2, title: 'Kelas Sains Terpadu', description: 'Program penguatan sains dengan metode STEM (Science, Technology, Engineering, Mathematics). Siswa mengikuti olimpiade sains dan penelitian.', icon: 'atom' },
+  { id: 3, title: 'Kelas Bilingual', description: 'Program bilingual (Arab dan Inggris) untuk mata pelajaran tertentu. Mempersiapkan siswa melanjutkan studi di sekolah unggulan dalam/luar negeri.', icon: 'languages' },
+  { id: 4, title: 'Kelas Digital', description: 'Program penguasaan literasi digital, coding, desain grafis, dan multimedia. Dilengkapi laboratorium komputer dan studio multimedia.', icon: 'monitor' },
+];
+
+export interface Pembiasaan {
+  id: number;
+  name: string;
+  description: string;
+  icon: string;
+  category: string;
+  schedule: string;
+}
+
+export interface DokumenDownload {
+  id: number;
+  title: string;
+  description: string;
+  icon: string;
+  fileUrl: string;
+  fileSize: string;
+  category: string;
+}
+
+export const pembiasaan: Pembiasaan[] = [
+  { id: 1, name: 'Sholat Dhuha', description: 'Pembiasaan sholat sunnah Dhuha berjamaah setiap pagi sebelum memulai pembelajaran.', icon: 'sun', category: 'Ibadah', schedule: 'Setiap hari, 06.30 - 07.00 WIB' },
+  { id: 2, name: 'Tadarus Al-Qur\'an', description: 'Membaca Al-Qur\'an bersama-sama selama 15 menit sebelum bel masuk kelas.', icon: 'book-open', category: 'Keagamaan', schedule: 'Setiap hari, 07.00 - 07.15 WIB' },
+  { id: 3, name: 'Upacara Bendera', description: 'Upacara bendera setiap hari Senin untuk menumbuhkan jiwa nasionalisme dan kedisiplinan.', icon: 'flag', category: 'Kedisiplinan', schedule: 'Setiap Senin, 07.00 - 07.45 WIB' },
+  { id: 4, name: 'Literasi Pagi', description: 'Membaca buku non-fiksi dan fiksi selama 15 menit untuk membangun budaya literasi.', icon: 'book-open', category: 'Akademik', schedule: 'Setiap hari, 07.15 - 07.30 WIB' },
+  { id: 5, name: 'Jumat Bersih', description: 'Gotong royong membersihkan lingkungan madrasah setiap hari Jumat.', icon: 'leaf', category: 'Lingkungan', schedule: 'Setiap Jumat, 07.00 - 07.30 WIB' },
+  { id: 6, name: 'Jumat Sehat', description: 'Senam pagi bersama dan jalan sehat untuk menjaga kebugaran jasmani.', icon: 'heart', category: 'Kesehatan', schedule: 'Jumat minggu ke-2 & ke-4, 07.00 - 08.00 WIB' },
+  { id: 7, name: 'Infaq Jumat', description: 'Pembiasaan berinfaq setiap hari Jumat untuk melatih kepedulian sosial.', icon: 'heart', category: 'Keagamaan', schedule: 'Setiap Jumat, saat literasi pagi' },
+  { id: 8, name: 'Kultum Siswa', description: 'Kuliah tujuh menit yang disampaikan oleh siswa secara bergiliran.', icon: 'message-square', category: 'Keagamaan', schedule: 'Setelah sholat Dhuha' },
+  { id: 9, name: 'Piket Kelas', description: 'Pembiasaan tanggung jawab melalui jadwal piket kebersihan kelas.', icon: 'building-2', category: 'Kedisiplinan', schedule: 'Setiap hari sesuai jadwal' },
+  { id: 10, name: 'Asmaul Husna', description: 'Membaca dan menghafal Asmaul Husna bersama-sama sebelum pembelajaran.', icon: 'star', category: 'Keagamaan', schedule: 'Setiap hari, 07.00 - 07.10 WIB' },
+];
+
+export const dokumenDownload: DokumenDownload[] = [
+  { id: 1, title: 'Buku Pedoman Akademik', description: 'Panduan lengkap sistem akademik dan kurikulum madrasah', icon: 'book-open', fileUrl: '/downloads/pedoman-akademik.pdf', fileSize: '2.4 MB', category: 'Akademik' },
+  { id: 2, title: 'Kalender Akademik 2025/2026', description: 'Kalender pendidikan tahun ajaran 2025/2026', icon: 'calendar', fileUrl: '/downloads/kalender-akademik-2025-2026.pdf', fileSize: '1.1 MB', category: 'Akademik' },
+  { id: 3, title: 'Buku Tata Tertib Siswa', description: 'Peraturan dan tata tertib yang berlaku bagi seluruh siswa', icon: 'book-open', fileUrl: '/downloads/tata-tertib-siswa.pdf', fileSize: '1.8 MB', category: 'Kesiswaan' },
+  { id: 4, title: 'Formulir Pendaftaran PMB', description: 'Formulir pendaftaran peserta didik baru', icon: 'pen-tool', fileUrl: '/downloads/formulir-pmb.pdf', fileSize: '520 KB', category: 'Pendaftaran' },
+  { id: 5, title: 'Brosur Penerimaan Siswa Baru', description: 'Informasi lengkap penerimaan siswa baru MTsN 2 Kebumen', icon: 'image', fileUrl: '/downloads/brosur-pmb.pdf', fileSize: '3.2 MB', category: 'Pendaftaran' },
+  { id: 6, title: 'Juknis Ekstrakurikuler', description: 'Petunjuk teknis pelaksanaan kegiatan ekstrakurikuler', icon: 'star', fileUrl: '/downloads/juknis-ekstrakurikuler.pdf', fileSize: '1.5 MB', category: 'Kesiswaan' },
+  { id: 7, title: 'Prosedur Izin Siswa', description: 'Tata cara pengajuan izin tidak masuk madrasah', icon: 'info', fileUrl: '/downloads/prosedur-izin.pdf', fileSize: '340 KB', category: 'Kesiswaan' },
+  { id: 8, title: 'Surat Keterangan Aktif', description: 'Format surat keterangan aktif sebagai siswa', icon: 'file-text', fileUrl: '/downloads/surat-aktif.pdf', fileSize: '280 KB', category: 'Administrasi' },
 ];
 
 // Helper function to get placeholder gradient color based on id

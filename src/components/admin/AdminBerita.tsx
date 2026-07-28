@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Icon from '@/components/ui/Icon';
 import AdminFormModal from './AdminFormModal';
 import {
-  getBerita, addBerita, updateBerita, deleteBerita, generateId,
+  useStoreData, getBerita, addBerita, updateBerita, deleteBerita, generateId,
   Berita,
 } from '@/lib/adminStore';
 
@@ -18,24 +18,21 @@ const formFields = [
     { label: 'Pengumuman', value: 'Pengumuman' },
     { label: 'Akademik', value: 'Akademik' },
   ]},
-  { name: 'image', label: 'Path Gambar', type: 'text' as const, placeholder: '/images/berita-1.jpg', required: true },
+  { name: 'image', label: 'Gambar Thumbnail', type: 'image' as const, placeholder: 'Upload gambar berita', required: true, imageWidth: 800, imageHeight: 450 },
   { name: 'slug', label: 'Slug URL', type: 'text' as const, placeholder: 'judul-berita', required: true },
 ];
 
 export default function AdminBerita() {
-  const [items, setItems] = useState<Berita[]>([]);
+  const items = useStoreData(getBerita);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Berita | null>(null);
 
-  useEffect(() => { setItems(getBerita()); }, []);
-
-  const refresh = () => setItems(getBerita());
-
-  const handleSave = (data: Record<string, string>) => {
+  const handleSave = async (data: Record<string, string>): Promise<boolean> => {
     if (editingItem) {
-      updateBerita(editingItem.id, data);
+      const ok = await updateBerita(editingItem.id, data);
+      if (!ok) return false;
     } else {
-      addBerita({
+      const ok = await addBerita({
         id: generateId(),
         title: data.title,
         excerpt: data.excerpt,
@@ -44,10 +41,11 @@ export default function AdminBerita() {
         image: data.image,
         slug: data.slug,
       });
+      if (!ok) return false;
     }
     setEditingItem(null);
     setModalOpen(false);
-    refresh();
+    return true;
   };
 
   const handleEdit = (item: Berita) => {
@@ -58,7 +56,6 @@ export default function AdminBerita() {
   const handleDelete = (id: number) => {
     if (confirm('Yakin ingin menghapus berita ini?')) {
       deleteBerita(id);
-      refresh();
     }
   };
 
@@ -113,6 +110,7 @@ export default function AdminBerita() {
                         onClick={() => handleEdit(item)}
                         className="p-2 rounded-lg text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors"
                         title="Edit"
+                        aria-label="Edit berita"
                       >
                         <Icon name="pen-tool" size={15} />
                       </button>
@@ -120,6 +118,7 @@ export default function AdminBerita() {
                         onClick={() => handleDelete(item.id)}
                         className="p-2 rounded-lg text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                         title="Hapus"
+                        aria-label="Hapus berita"
                       >
                         <Icon name="trash-2" size={15} />
                       </button>

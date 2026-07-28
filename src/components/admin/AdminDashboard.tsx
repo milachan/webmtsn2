@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Icon from '@/components/ui/Icon';
 import {
+  useStoreData,
   getBerita, getPengumuman, getAgenda, getFasilitas,
   getGuru, getEkstrakurikuler, getGaleri, getTestimoni,
-  getSejarah, getProgramUnggulan, getNilaiUnggulan, resetAllData,
+  getSejarah, getProgramUnggulan, getNilaiUnggulan, getPrestasi, resetAllData,
 } from '@/lib/adminStore';
 import Link from 'next/link';
 
@@ -17,24 +18,27 @@ interface StatCard {
   section: string;
 }
 
-export default function AdminDashboard() {
-  const [stats, setStats] = useState<StatCard[]>([]);
-  const [showReset, setShowReset] = useState(false);
+function useStats(): StatCard[] {
+  // useStoreData ensures stats recalculate whenever any store data changes
+  return useStoreData(() => [
+    { label: 'Berita', count: getBerita().length, icon: 'book-open', color: 'emerald', section: 'berita' },
+    { label: 'Pengumuman', count: getPengumuman().length, icon: 'bell', color: 'amber', section: 'pengumuman' },
+    { label: 'Agenda', count: getAgenda().length, icon: 'calendar', color: 'blue', section: 'agenda' },
+    { label: 'Fasilitas', count: getFasilitas().length, icon: 'building-2', color: 'teal', section: 'fasilitas' },
+    { label: 'Guru & Tendik', count: getGuru().length, icon: 'graduation-cap', color: 'indigo', section: 'guru' },
+    { label: 'Ekstrakurikuler', count: getEkstrakurikuler().length, icon: 'compass', color: 'purple', section: 'ekstrakurikuler' },
+    { label: 'Galeri', count: getGaleri().length, icon: 'image', color: 'rose', section: 'galeri' },
+    { label: 'Testimoni', count: getTestimoni().length, icon: 'message-square', color: 'cyan', section: 'testimoni' },
+    { label: 'Sejarah', count: getSejarah().length, icon: 'clock', color: 'orange', section: 'sejarah' },
+    { label: 'Program Unggulan', count: getProgramUnggulan().length, icon: 'star', color: 'yellow', section: 'program' },
+    { label: 'Prestasi', count: getPrestasi().length, icon: 'trophy', color: 'pink', section: 'prestasi' },
+    { label: 'Nilai Unggulan', count: getNilaiUnggulan().length, icon: 'star', color: 'lime', section: 'nilainunggulan' },
+  ]);
+}
 
-  useEffect(() => {
-    setStats([
-      { label: 'Berita', count: getBerita().length, icon: 'book-open', color: 'emerald', section: 'berita' },
-      { label: 'Pengumuman', count: getPengumuman().length, icon: 'bell', color: 'amber', section: 'pengumuman' },
-      { label: 'Agenda', count: getAgenda().length, icon: 'calendar', color: 'blue', section: 'agenda' },
-      { label: 'Fasilitas', count: getFasilitas().length, icon: 'building-2', color: 'teal', section: 'fasilitas' },
-      { label: 'Guru & Tendik', count: getGuru().length, icon: 'graduation-cap', color: 'indigo', section: 'guru' },
-      { label: 'Ekstrakurikuler', count: getEkstrakurikuler().length, icon: 'compass', color: 'purple', section: 'ekstrakurikuler' },
-      { label: 'Galeri', count: getGaleri().length, icon: 'image', color: 'rose', section: 'galeri' },
-      { label: 'Testimoni', count: getTestimoni().length, icon: 'message-square', color: 'cyan', section: 'testimoni' },
-      { label: 'Sejarah', count: getSejarah().length, icon: 'clock', color: 'orange', section: 'sejarah' },
-      { label: 'Program Unggulan', count: getProgramUnggulan().length, icon: 'star', color: 'yellow', section: 'program' },
-    ]);
-  }, []);
+export default function AdminDashboard() {
+  const stats = useStats();
+  const [showReset, setShowReset] = useState(false);
 
   const handleReset = () => {
     if (confirm('YAKIN reset semua data? Data yang sudah dimodifikasi akan hilang dan kembali ke data awal!')) {
@@ -54,6 +58,8 @@ export default function AdminDashboard() {
     cyan: { bg: 'bg-cyan-50', text: 'text-cyan-700', darkBg: 'dark:bg-cyan-900/20', darkText: 'dark:text-cyan-300' },
     orange: { bg: 'bg-orange-50', text: 'text-orange-700', darkBg: 'dark:bg-orange-900/20', darkText: 'dark:text-orange-300' },
     yellow: { bg: 'bg-yellow-50', text: 'text-yellow-700', darkBg: 'dark:bg-yellow-900/20', darkText: 'dark:text-yellow-300' },
+    pink: { bg: 'bg-pink-50', text: 'text-pink-700', darkBg: 'dark:bg-pink-900/20', darkText: 'dark:text-pink-300' },
+    lime: { bg: 'bg-lime-50', text: 'text-lime-700', darkBg: 'dark:bg-lime-900/20', darkText: 'dark:text-lime-300' },
   };
 
   return (
@@ -98,8 +104,8 @@ export default function AdminDashboard() {
             <h3 className="font-display font-semibold text-sm text-gray-900 dark:text-dark-text">Informasi Penyimpanan</h3>
           </div>
           <p className="text-sm text-gray-500 dark:text-dark-text-muted leading-relaxed">
-            Semua data tersimpan di <strong className="text-gray-700 dark:text-dark-text">localStorage browser</strong> Anda. 
-            Data tidak akan hilang selama Anda tidak membersihkan data browser. 
+            Semua data tersimpan di <strong className="text-gray-700 dark:text-dark-text">database server</strong> melalui API. 
+            Perubahan data langsung tersimpan dan otomatis tersinkronisasi ke halaman utama website. 
             Untuk mengembalikan data ke awal (default), gunakan tombol reset di bawah.
           </p>
         </div>

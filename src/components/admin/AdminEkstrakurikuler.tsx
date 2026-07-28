@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Icon from '@/components/ui/Icon';
 import AdminFormModal from './AdminFormModal';
 import {
-  getEkstrakurikuler, addEkstrakurikuler, updateEkstrakurikuler, deleteEkstrakurikuler, generateId,
+  useStoreData, getEkstrakurikuler, addEkstrakurikuler, updateEkstrakurikuler, deleteEkstrakurikuler, generateId,
   Ekstrakurikuler,
 } from '@/lib/adminStore';
 
@@ -25,29 +25,27 @@ const formFields = [
 ];
 
 export default function AdminEkstrakurikuler() {
-  const [items, setItems] = useState<Ekstrakurikuler[]>([]);
+  const items = useStoreData(getEkstrakurikuler);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Ekstrakurikuler | null>(null);
 
-  useEffect(() => { setItems(getEkstrakurikuler()); }, []);
-
-  const refresh = () => setItems(getEkstrakurikuler());
-
-  const handleSave = (data: Record<string, string>) => {
+  const handleSave = async (data: Record<string, string>): Promise<boolean> => {
     if (editingItem) {
-      updateEkstrakurikuler(editingItem.id, data);
+      const ok = await updateEkstrakurikuler(editingItem.id, data);
+      if (!ok) return false;
     } else {
-      addEkstrakurikuler({
+      const ok = await addEkstrakurikuler({
         id: generateId(),
         name: data.name,
         description: data.description,
         icon: data.icon,
         category: data.category,
       });
+      if (!ok) return false;
     }
     setEditingItem(null);
     setModalOpen(false);
-    refresh();
+    return true;
   };
 
   const handleEdit = (item: Ekstrakurikuler) => {
@@ -58,7 +56,6 @@ export default function AdminEkstrakurikuler() {
   const handleDelete = (id: number) => {
     if (confirm('Yakin ingin menghapus ekstrakurikuler ini?')) {
       deleteEkstrakurikuler(id);
-      refresh();
     }
   };
 
@@ -90,9 +87,9 @@ export default function AdminEkstrakurikuler() {
                   </span>
                 </div>
               </div>
-              <div className="flex items-center gap-1 ml-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"><button onClick={() => handleEdit(item)} className="p-1.5 rounded-lg text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors">
+              <div className="flex items-center gap-1 ml-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"><button onClick={() => handleEdit(item)} className="p-1.5 rounded-lg text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors" aria-label="Edit ekstrakurikuler">
                     <Icon name="pen-tool" size={14} />
-                </button><button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                </button><button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors" aria-label="Hapus ekstrakurikuler">
                     <Icon name="trash-2" size={14} />
                 </button>
               </div>

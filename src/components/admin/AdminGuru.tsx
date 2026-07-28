@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Icon from '@/components/ui/Icon';
 import AdminFormModal from './AdminFormModal';
 import {
-  getGuru, addGuru, updateGuru, deleteGuru, generateId,
+  useStoreData, getGuru, addGuru, updateGuru, deleteGuru, generateId,
   Guru,
 } from '@/lib/adminStore';
 
@@ -12,33 +12,31 @@ const formFields = [
   { name: 'name', label: 'Nama Lengkap', type: 'text' as const, placeholder: 'Masukkan nama lengkap', required: true },
   { name: 'position', label: 'Jabatan', type: 'text' as const, placeholder: 'Contoh: Guru Mapel, Waka Kurikulum', required: true },
   { name: 'subject', label: 'Bidang Studi', type: 'text' as const, placeholder: 'Contoh: Matematika, Bahasa Indonesia', required: true },
-  { name: 'image', label: 'Path Gambar', type: 'text' as const, placeholder: '/images/guru-1.jpg (kosongkan jika belum ada)' },
+  { name: 'image', label: 'Foto Profil', type: 'image' as const, placeholder: 'Upload foto guru', imageWidth: 400, imageHeight: 400 },
 ];
 
 export default function AdminGuru() {
-  const [items, setItems] = useState<Guru[]>([]);
+  const items = useStoreData(getGuru);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Guru | null>(null);
 
-  useEffect(() => { setItems(getGuru()); }, []);
-
-  const refresh = () => setItems(getGuru());
-
-  const handleSave = (data: Record<string, string>) => {
+  const handleSave = async (data: Record<string, string>): Promise<boolean> => {
     if (editingItem) {
-      updateGuru(editingItem.id, data);
+      const ok = await updateGuru(editingItem.id, data);
+      if (!ok) return false;
     } else {
-      addGuru({
+      const ok = await addGuru({
         id: generateId(),
         name: data.name,
         position: data.position,
         subject: data.subject,
         image: data.image || '',
       });
+      if (!ok) return false;
     }
     setEditingItem(null);
     setModalOpen(false);
-    refresh();
+    return true;
   };
 
   const handleEdit = (item: Guru) => {
@@ -49,7 +47,6 @@ export default function AdminGuru() {
   const handleDelete = (id: number) => {
     if (confirm('Yakin ingin menghapus data guru ini?')) {
       deleteGuru(id);
-      refresh();
     }
   };
 
@@ -87,10 +84,10 @@ export default function AdminGuru() {
                   <td className="px-4 py-3.5 text-gray-500 dark:text-dark-text-muted hidden sm:table-cell">{item.subject}</td>
                   <td className="px-4 py-3.5 text-right">
                     <div className="flex items-center justify-end gap-1">
-                      <button onClick={() => handleEdit(item)} className="p-2 rounded-lg text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors" title="Edit">
+                      <button onClick={() => handleEdit(item)} className="p-2 rounded-lg text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors" title="Edit" aria-label="Edit data guru">
                         <Icon name="pen-tool" size={15} />
                       </button>
-                      <button onClick={() => handleDelete(item.id)} className="p-2 rounded-lg text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors" title="Hapus">
+                      <button onClick={() => handleDelete(item.id)} className="p-2 rounded-lg text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors" title="Hapus" aria-label="Hapus data guru">
                         <Icon name="trash-2" size={15} />
                       </button>
                     </div>

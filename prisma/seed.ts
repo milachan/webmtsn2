@@ -12,9 +12,9 @@ async function main() {
 
   // Berita
   await prisma.berita.createMany({ data: [
-    { id: 1, title: 'MTsN 2 Kebumen Juara Umum Olimpiade Sains Madrasah Tingkat Kabupaten', excerpt: 'Tim Olimpiade Sains Madrasah Tsanawiyah Negeri 2 Kebumen berhasil meraih juara umum dengan membawa pulang 5 medali emas dan 3 perak.', date: '15 Juli 2026', category: 'Prestasi', image: '/images/berita-1.jpg', slug: 'juara-olimpiade-sains' },
-    { id: 2, title: 'Kegiatan Pesantren Kilat Ramadhan 1447 H', excerpt: 'Pesantren kilat diikuti oleh seluruh siswa kelas 7, 8, dan 9 dengan kegiatan tadarus, kajian kitab kuning, dan praktik ibadah.', date: '10 Juli 2026', category: 'Kegiatan', image: '/images/berita-2.jpg', slug: 'pesantren-kilat' },
-    { id: 3, title: 'PMB Tahun Ajaran 2026/2027 Resmi Dibuka', excerpt: 'Pendaftaran peserta didik baru MTs Negeri 2 Kebumen dibuka mulai 1 Agustus 2026. Kuota terbatas 280 siswa.', date: '5 Juli 2026', category: 'Pengumuman', image: '/images/berita-3.jpg', slug: 'pmb-dibuka' },
+    { id: 1, title: 'MTsN 2 Kebumen Juara Umum Olimpiade Sains Madrasah Tingkat Kabupaten', excerpt: 'Tim Olimpiade Sains Madrasah Tsanawiyah Negeri 2 Kebumen berhasil meraih juara umum dengan membawa pulang 5 medali emas dan 3 perak.', date: '15 Juli 2026', category: 'Prestasi', image: '/images/berita-1.svg', slug: 'juara-olimpiade-sains' },
+    { id: 2, title: 'Kegiatan Pesantren Kilat Ramadhan 1447 H', excerpt: 'Pesantren kilat diikuti oleh seluruh siswa kelas 7, 8, dan 9 dengan kegiatan tadarus, kajian kitab kuning, dan praktik ibadah.', date: '10 Juli 2026', category: 'Kegiatan', image: '/images/berita-2.svg', slug: 'pesantren-kilat' },
+    { id: 3, title: 'PMB Tahun Ajaran 2026/2027 Resmi Dibuka', excerpt: 'Pendaftaran peserta didik baru MTs Negeri 2 Kebumen dibuka mulai 1 Agustus 2026. Kuota terbatas 280 siswa.', date: '5 Juli 2026', category: 'Pengumuman', image: '/images/berita-3.svg', slug: 'pmb-dibuka' },
   ], skipDuplicates: true });
 
   // Pengumuman
@@ -31,8 +31,8 @@ async function main() {
 
   // Fasilitas
   await prisma.fasilitas.createMany({ data: [
-    { id: 1, name: 'Ruang Kelas Ber-AC', description: '27 ruang kelas nyaman dengan pendingin udara, LCD proyektor, dan akses internet', icon: 'building-2', image: '/images/fasilitas-kelas.jpg' },
-    { id: 2, name: 'Laboratorium IPA', description: 'Laboratorium Fisika, Kimia, dan Biologi lengkap dengan alat peraga modern', icon: 'flask-conical', image: '/images/fasilitas-lab.jpg' },
+    { id: 1, name: 'Ruang Kelas Ber-AC', description: '27 ruang kelas nyaman dengan pendingin udara, LCD proyektor, dan akses internet', icon: 'building-2', image: '/images/fasilitas-kelas.svg' },
+    { id: 2, name: 'Laboratorium IPA', description: 'Laboratorium Fisika, Kimia, dan Biologi lengkap dengan alat peraga modern', icon: 'flask-conical', image: '/images/fasilitas-lab.svg' },
   ], skipDuplicates: true });
 
   // Guru
@@ -49,8 +49,8 @@ async function main() {
 
   // Galeri
   await prisma.galeri.createMany({ data: [
-    { id: 1, title: 'Upacara Bendera', category: 'Kegiatan', image: '/images/galeri-1.jpg', description: 'Upacara bendera setiap Senin pagi' },
-    { id: 2, title: 'Laboratorium Komputer', category: 'Fasilitas', image: '/images/galeri-2.jpg', description: 'Laboratorium komputer modern' },
+    { id: 1, title: 'Upacara Bendera', category: 'Kegiatan', image: '/images/galeri-1.svg', description: 'Upacara bendera setiap Senin pagi' },
+    { id: 2, title: 'Laboratorium Komputer', category: 'Fasilitas', image: '/images/galeri-2.svg', description: 'Laboratorium komputer modern' },
   ], skipDuplicates: true });
 
   // Testimoni

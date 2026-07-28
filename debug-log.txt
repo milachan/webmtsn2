@@ -1,0 +1,130 @@
+
+========================================
+DEBUG LOG - MTsN 2 Kebumen Blank Page Bug
+========================================
+Date: 2026-07-27T16:12:15.044Z
+
+--- CONSOLE LOGS ---
+[info] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+[log] DataProvider mount [object Object]
+[log] DataProvider mount [object Object]
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[log] DataProvider useEffect run [object Object]
+[log] DataProvider useEffect run [object Object]
+[log] DataProvider mount [object Object]
+[log] DataProvider mount [object Object]
+[log] [Fast Refresh] rebuilding
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[log] DataProvider mount [object Object]
+[log] DataProvider mount [object Object]
+[info] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+[log] DataProvider mount [object Object]
+[log] DataProvider mount [object Object]
+[log] DataProvider useEffect run [object Object]
+[log] DataProvider useEffect run [object Object]
+[log] DataProvider mount [object Object]
+[log] DataProvider mount [object Object]
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[log] [Fast Refresh] rebuilding
+[log] [Fast Refresh] done in 994ms
+[info] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+[log] DataProvider mount [object Object]
+[log] DataProvider mount [object Object]
+[log] DataProvider useEffect run [object Object]
+[log] DataProvider useEffect run [object Object]
+[log] DataProvider mount [object Object]
+[log] DataProvider mount [object Object]
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[log] DataProvider mount [object Object]
+[log] DataProvider mount [object Object]
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[log] DataProvider useEffect run [object Object]
+[log] DataProvider useEffect run [object Object]
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[warn] Skipping auto-scroll behavior due to `position: sticky` or `position: fixed` on element: [node HTMLDivElement]
+[warn] Skipping auto-scroll behavior due to `position: sticky` or `position: fixed` on element: [node HTMLDivElement]
+
+--- ERRORS ---
+No page errors caught
+
+--- RESULTS ---
+First nav to /profil/sejarah: OK
+  URL: http://localhost:3000/profil/sejarah
+After refresh: OK (main children: 1)
+  URL: http://localhost:3000/profil/sejarah
+Second nav to /profil/sejarah: OK
+  URL: http://localhost:3000/profil/sejarah
+
+--- PAGE ANALYSIS ---
+Step 1 (Beranda): body="Langsung ke konten utama
+M
+MTsN 2 Kebumen
+
+Berkarakter • Berprestasi
+
+PMB
+Mendidik Generasi Islami Unggul
+
+Madrasah unggulan di Kebumen yang mencetak generasi beriman, berilmu, berkarakter mulia, dan "
+Step 2 (1st nav): body="Langsung ke konten utama
+M
+MTsN 2 Kebumen
+
+Berkarakter • Berprestasi
+
+PMB
+Kembali ke Profil
+Sejarah Madrasah
+
+Perjalanan panjang MTs Negeri 2 Kebumen
+
+Berdiri sejak tahun 1995, MTs Negeri 2 Kebumen te", main children=1
+Step 3 (refresh): body="Langsung ke konten utama
+M
+MTsN 2 Kebumen
+
+Berkarakter • Berprestasi
+
+PMB
+Kembali ke Profil
+Sejarah Madrasah
+
+Perjalanan panjang MTs Negeri 2 Kebumen
+
+Berdiri sejak tahun 1995, MTs Negeri 2 Kebumen te", main children=1
+Step 5 (2nd nav): body="Langsung ke konten utama
+M
+MTsN 2 Kebumen
+
+Berkarakter • Berprestasi
+
+PMB
+Kembali ke Profil
+Sejarah Madrasah
+
+Perjalanan panjang MTs Negeri 2 Kebumen
+
+Berdiri sejak tahun 1995, MTs Negeri 2 Kebumen te", main children=1

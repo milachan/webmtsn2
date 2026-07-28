@@ -5,18 +5,20 @@ import ScrollReveal, { StaggerContainer, StaggerItem } from '@/components/ui/Scr
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import Link from 'next/link';
-import { beritaTerbaru, getGradientColor } from '@/lib/data';
+import { getGradientColor } from '@/lib/data';
+import { useStoreData, getBerita } from '@/lib/adminStore';
 
 export default function BeritaPage() {
+  const beritaTerbaru = useStoreData(getBerita);
   return (
     <main className="pt-24">
       {/* Hero */}
       <section className="relative py-20 bg-gradient-to-br from-emerald-900 via-emerald-800 to-green-900 overflow-hidden">
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'60\' height=\'60\' viewBox=\'0 0 60 60\'%3E%3Cpath d=\'M30 2L58 30L30 58L2 30Z\' fill=\'none\' stroke=\'white\' stroke-width=\'0.5\'/%3E%3C/svg%3E")' }} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="relative z-10 max-w-8xl 2xl:max-w-9xl mx-auto px-4 sm:px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <Link href="/informasi" className="inline-flex items-center gap-2 text-white/60 hover:text-white mb-4 transition-colors text-sm group">
+            <Link href="/informasi" className="inline-flex items-center gap-2 text-white/75 hover:text-white mb-4 transition-colors text-sm group">
               <Icon name="chevron-left" size={16} className="group-hover:-translate-x-1 transition-transform" /> Kembali ke Informasi
             </Link>
             <h1 className="text-fluid-hero font-bold text-white mb-3">Berita</h1>
@@ -28,7 +30,7 @@ export default function BeritaPage() {
 
       {/* Content */}
       <section className="py-20 bg-white dark:bg-dark-bg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="max-w-8xl 2xl:max-w-9xl mx-auto px-4 sm:px-6">
           {/* Stats bar */}
           <div className="flex items-center gap-3 mb-10">
             <div className="h-px flex-1 bg-gradient-to-r from-emerald-200 to-transparent dark:from-emerald-800" />

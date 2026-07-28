@@ -55,11 +55,8 @@
 }
 
 /* ===== Base Styles ===== */
-* {
-  transition-property: background-color, border-color, color;
-  transition-duration: 0.3s;
-  transition-timing-function: var(--ease-out-expo);
-}
+/* Global transitions are handled per-component via Tailwind utilities.
+   This avoids redundant transition rules and improves performance. */
 
 html {
   scroll-behavior: smooth;
@@ -265,6 +262,39 @@ h1, h2, h3, h4, h5, h6 {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
   border-radius: 4px;
+}
+
+/* ===== Skip-to-content link (accessibility) ===== */
+.skip-to-content {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  padding: 0.75rem 1.5rem;
+  background: var(--color-primary);
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border-radius: 0 0 8px 8px;
+  transition: top 0.2s var(--ease-out-expo);
+}
+
+.skip-to-content:focus {
+  top: 0;
+}
+
+/* ===== Screen reader only ===== */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 /* ===== Fluid Typography ===== */

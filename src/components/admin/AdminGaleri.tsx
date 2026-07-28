@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Icon from '@/components/ui/Icon';
 import AdminFormModal from './AdminFormModal';
 import {
-  getGaleri, addGaleri, updateGaleri, deleteGaleri, generateId,
+  useStoreData, getGaleri, addGaleri, updateGaleri, deleteGaleri, generateId,
   GaleriItem,
 } from '@/lib/adminStore';
 
@@ -15,34 +15,32 @@ const formFields = [
     { label: 'Fasilitas', value: 'Fasilitas' },
     { label: 'Akademik', value: 'Akademik' },
   ]},
-  { name: 'image', label: 'Path Gambar', type: 'text' as const, placeholder: '/images/galeri-1.jpg', required: true },
+  { name: 'image', label: 'File Foto', type: 'image' as const, placeholder: 'Upload foto galeri', required: true, imageWidth: 800, imageHeight: 600 },
   { name: 'description', label: 'Deskripsi', type: 'text' as const, placeholder: 'Tulis deskripsi singkat foto', required: true },
 ];
 
 export default function AdminGaleri() {
-  const [items, setItems] = useState<GaleriItem[]>([]);
+  const items = useStoreData(getGaleri);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<GaleriItem | null>(null);
 
-  useEffect(() => { setItems(getGaleri()); }, []);
-
-  const refresh = () => setItems(getGaleri());
-
-  const handleSave = (data: Record<string, string>) => {
+  const handleSave = async (data: Record<string, string>): Promise<boolean> => {
     if (editingItem) {
-      updateGaleri(editingItem.id, data);
+      const ok = await updateGaleri(editingItem.id, data);
+      if (!ok) return false;
     } else {
-      addGaleri({
+      const ok = await addGaleri({
         id: generateId(),
         title: data.title,
         category: data.category,
         image: data.image,
         description: data.description,
       });
+      if (!ok) return false;
     }
     setEditingItem(null);
     setModalOpen(false);
-    refresh();
+    return true;
   };
 
   const handleEdit = (item: GaleriItem) => {
@@ -53,7 +51,6 @@ export default function AdminGaleri() {
   const handleDelete = (id: number) => {
     if (confirm('Yakin ingin menghapus foto ini?')) {
       deleteGaleri(id);
-      refresh();
     }
   };
 
@@ -83,10 +80,10 @@ export default function AdminGaleri() {
               </span>
             </div>
             <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-              <button onClick={() => handleEdit(item)} className="p-1.5 rounded-lg bg-white/90 dark:bg-dark-card/90 text-gray-600 dark:text-dark-text hover:text-emerald-600 dark:hover:text-emerald-400 shadow-sm transition-colors">
+              <button onClick={() => handleEdit(item)} className="p-1.5 rounded-lg bg-white/90 dark:bg-dark-card/90 text-gray-600 dark:text-dark-text hover:text-emerald-600 dark:hover:text-emerald-400 shadow-sm transition-colors" aria-label="Edit galeri">
                 <Icon name="pen-tool" size={13} />
               </button>
-              <button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg bg-white/90 dark:bg-dark-card/90 text-gray-600 dark:text-dark-text hover:text-red-600 dark:hover:text-red-400 shadow-sm transition-colors">
+              <button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg bg-white/90 dark:bg-dark-card/90 text-gray-600 dark:text-dark-text hover:text-red-600 dark:hover:text-red-400 shadow-sm transition-colors" aria-label="Hapus galeri">
                 <Icon name="trash-2" size={13} />
               </button>
             </div>

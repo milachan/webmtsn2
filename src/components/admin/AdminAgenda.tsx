@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Icon from '@/components/ui/Icon';
 import AdminFormModal from './AdminFormModal';
 import {
-  getAgenda, addAgenda, updateAgenda, deleteAgenda, generateId,
+  useStoreData, getAgenda, addAgenda, updateAgenda, deleteAgenda, generateId,
   Agenda,
 } from '@/lib/adminStore';
 
@@ -17,19 +17,16 @@ const formFields = [
 ];
 
 export default function AdminAgenda() {
-  const [items, setItems] = useState<Agenda[]>([]);
+  const items = useStoreData(getAgenda);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Agenda | null>(null);
 
-  useEffect(() => { setItems(getAgenda()); }, []);
-
-  const refresh = () => setItems(getAgenda());
-
-  const handleSave = (data: Record<string, string>) => {
+  const handleSave = async (data: Record<string, string>): Promise<boolean> => {
     if (editingItem) {
-      updateAgenda(editingItem.id, data);
+      const ok = await updateAgenda(editingItem.id, data);
+      if (!ok) return false;
     } else {
-      addAgenda({
+      const ok = await addAgenda({
         id: generateId(),
         title: data.title,
         date: data.date,
@@ -37,10 +34,11 @@ export default function AdminAgenda() {
         location: data.location,
         description: data.description,
       });
+      if (!ok) return false;
     }
     setEditingItem(null);
     setModalOpen(false);
-    refresh();
+    return true;
   };
 
   const handleEdit = (item: Agenda) => {
@@ -51,7 +49,6 @@ export default function AdminAgenda() {
   const handleDelete = (id: number) => {
     if (confirm('Yakin ingin menghapus agenda ini?')) {
       deleteAgenda(id);
-      refresh();
     }
   };
 
@@ -90,9 +87,9 @@ export default function AdminAgenda() {
                 </div>
                 <p className="text-xs text-gray-400 dark:text-dark-text-muted mt-2 line-clamp-2">{item.description}</p>
               </div>
-              <div className="flex items-center gap-1 ml-3 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"><button onClick={() => handleEdit(item)} className="p-1.5 rounded-lg text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors">
+              <div className="flex items-center gap-1 ml-3 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"><button onClick={() => handleEdit(item)} className="p-1.5 rounded-lg text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors" aria-label="Edit agenda">
                     <Icon name="pen-tool" size={14} />
-                </button><button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                </button><button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors" aria-label="Hapus agenda">
                     <Icon name="trash-2" size={14} />
                 </button>
               </div>

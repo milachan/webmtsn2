@@ -6,12 +6,14 @@ import Icon from '@/components/ui/Icon';
 import SectionTitle from '@/components/ui/SectionTitle';
 import Card from '@/components/ui/Card';
 import { getGradientColor } from '@/lib/data';
-import { getFasilitas, Fasilitas } from '@/lib/adminStore';
+import { useStoreData, getFasilitas, Fasilitas } from '@/lib/adminStore';
 
 function TiltCard({ item, index }: { item: Fasilitas; index: number }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [rotateX, setRotateX] = useState(0);
   const [rotateY, setRotateY] = useState(0);
+  const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!cardRef.current) return;
@@ -44,10 +46,35 @@ function TiltCard({ item, index }: { item: Fasilitas; index: number }) {
         hover="glow"
         className="h-full"
       >
-        <div className={`relative h-40 bg-gradient-to-br ${grad} flex items-center justify-center`}>
-          <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-            <Icon name={item.icon} size={28} className="text-white" />
-          </div>
+        <div className={`relative h-40 ${item.image ? '' : `bg-gradient-to-br ${grad}`} overflow-hidden flex items-center justify-center`}>
+          {item.image && !imageError ? (
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={item.image}
+                alt={item.name}
+                suppressHydrationWarning
+                className={`w-full h-full object-cover transition-all duration-500 ${
+                  imageLoaded ? 'opacity-100 group-hover:scale-110' : 'opacity-0'
+                }`}
+                onLoad={() => setImageLoaded(true)}
+                onError={() => setImageError(true)}
+              />
+              {!imageLoaded && (
+                <div className={`absolute inset-0 bg-gradient-to-br ${grad} animate-pulse flex items-center justify-center`}>
+                  <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                    <Icon name={item.icon} size={28} className="text-white/60" />
+                  </div>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className={`bg-gradient-to-br ${grad} w-full h-full flex items-center justify-center`}>
+              <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                <Icon name={item.icon} size={28} className="text-white" />
+              </div>
+            </div>
+          )}
         </div>
         <div className="p-5">
           <h3 className="font-display font-semibold text-gray-900 dark:text-dark-text mb-2">
@@ -65,18 +92,15 @@ function TiltCard({ item, index }: { item: Fasilitas; index: number }) {
 export default function CarouselFasilitas() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const items = getFasilitas();
+  const items = useStoreData(getFasilitas);
   const totalSlides = items.length;
 
   const scrollTo = (index: number) => {
     if (!scrollRef.current) return;
     const target = Math.max(0, Math.min(index, totalSlides - 1));
-    const targetEl = scrollRef.current.children[target] as HTMLElement;
+    const targetEl = scrollRef.current.querySelector(`[data-slide-index="${target}"]`) as HTMLElement;
     if (targetEl) {
-      scrollRef.current.scrollTo({
-        left: targetEl.offsetLeft,
-        behavior: 'smooth',
-      });
+      targetEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
     }
     setCurrentIndex(target);
   };
@@ -86,7 +110,7 @@ export default function CarouselFasilitas() {
 
   return (
     <section className="py-20 bg-white dark:bg-dark-bg overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="max-w-8xl 2xl:max-w-9xl mx-auto px-4 sm:px-6">
         <SectionTitle
           title="Fasilitas & Kegiatan"
           subtitle="Sarana Prasarana"
@@ -99,7 +123,9 @@ export default function CarouselFasilitas() {
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {items.map((item, index) => (
-              <TiltCard key={item.id} item={item} index={index} />
+              <div key={item.id} data-slide-index={index}>
+                <TiltCard item={item} index={index} />
+              </div>
             ))}
           </div>
 
@@ -113,20 +139,23 @@ export default function CarouselFasilitas() {
             >
               <Icon name="chevron-left" size={18} />
             </button>
-            <div className="flex gap-2">
+
+            {/* Dots — all items, each works reliably via scrollIntoView */}
+            <div className="flex items-center gap-2">
               {Array.from({ length: totalSlides }).map((_, i) => (
                 <button
                   key={i}
                   onClick={() => scrollTo(i)}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  className={`h-2 rounded-full transition-all duration-300 ${
                     i === currentIndex
                       ? 'bg-emerald-600 dark:bg-emerald-400 w-6'
-                      : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400'
+                      : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 w-2'
                   }`}
                   aria-label={`Slide ${i + 1}`}
                 />
               ))}
             </div>
+
             <button
               onClick={next}
               disabled={currentIndex >= totalSlides - 1}

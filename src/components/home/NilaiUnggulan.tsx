@@ -4,16 +4,16 @@ import { motion } from 'framer-motion';
 import Icon from '@/components/ui/Icon';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import SectionTitle from '@/components/ui/SectionTitle';
-import { getNilaiUnggulan } from '@/lib/adminStore';
+import { useStoreData, getNilaiUnggulan } from '@/lib/adminStore';
 
 export default function NilaiUnggulan() {
-  const nilaiUnggulan = getNilaiUnggulan();
+  const nilaiUnggulan = useStoreData(getNilaiUnggulan);
   const highlight = nilaiUnggulan.find((n) => n.highlight);
   const others = nilaiUnggulan.filter((n) => !n.highlight);
 
   return (
     <section className="py-20 bg-white dark:bg-dark-bg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="max-w-8xl 2xl:max-w-9xl mx-auto px-4 sm:px-6">
         <SectionTitle
           title="Nilai Unggulan Madrasah"
           subtitle="Keunggulan Kami"

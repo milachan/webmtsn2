@@ -5,12 +5,13 @@ import { motion } from 'framer-motion';
 import ScrollReveal, { StaggerContainer, StaggerItem } from '@/components/ui/ScrollReveal';
 import Icon from '@/components/ui/Icon';
 import Card from '@/components/ui/Card';
-import { ekstrakurikuler } from '@/lib/data';
+import { useStoreData, getEkstrakurikuler } from '@/lib/adminStore';
 import Link from 'next/link';
 
 const categories = ['Semua', 'Keagamaan', 'Olahraga', 'Sains', 'Seni', 'Kedisiplinan', 'Kesehatan', 'Akademik', 'Wajib'];
 
 export default function EkstrakurikulerPage() {
+  const ekstrakurikuler = useStoreData(getEkstrakurikuler);
   const [filter, setFilter] = useState('Semua');
   const filtered = filter === 'Semua' ? ekstrakurikuler : ekstrakurikuler.filter((e) => e.category === filter);
 
@@ -18,9 +19,9 @@ export default function EkstrakurikulerPage() {
     <main className="pt-24">
       <section className="relative py-16 bg-gradient-to-br from-emerald-900 via-emerald-800 to-green-900 overflow-hidden">
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'60\' height=\'60\' viewBox=\'0 0 60 60\'%3E%3Cpath d=\'M30 2L58 30L30 58L2 30Z\' fill=\'none\' stroke=\'white\' stroke-width=\'0.5\'/%3E%3C/svg%3E")' }} />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="relative z-10 max-w-8xl 2xl:max-w-9xl mx-auto px-4 sm:px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <Link href="/kesiswaan" className="inline-flex items-center gap-2 text-white/60 hover:text-white mb-4 transition-colors text-sm">
+            <Link href="/kesiswaan" className="inline-flex items-center gap-2 text-white/75 hover:text-white mb-4 transition-colors text-sm">
               <Icon name="chevron-left" size={16} /> Kembali ke Kesiswaan
             </Link>
             <h1 className="text-fluid-hero font-bold text-white mb-3">Ekstrakurikuler</h1>
@@ -29,7 +30,7 @@ export default function EkstrakurikulerPage() {
         </div>
       </section>
       <section className="py-16 bg-white dark:bg-dark-bg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="max-w-8xl 2xl:max-w-9xl mx-auto px-4 sm:px-6">
           <div className="flex flex-wrap gap-2 mb-8">
             {categories.map((cat) => (
               <button

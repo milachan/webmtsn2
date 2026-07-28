@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import Icon from '@/components/ui/Icon';
 import MobileMenu from './MobileMenu';
 import SearchModal from './SearchModal';
+import { useStoreData, getSchoolData } from '@/lib/adminStore';
 
 const navItems = [
   { label: 'Beranda', href: '/' },
@@ -36,6 +37,7 @@ const navItems = [
     href: '/kesiswaan',
     children: [
       { label: 'Ekstrakurikuler', href: '/kesiswaan/ekstrakurikuler' },
+      { label: 'Pembiasaan', href: '/kesiswaan/pembiasaan' },
       { label: 'Tata Tertib', href: '/kesiswaan/tata-tertib' },
     ],
   },
@@ -47,6 +49,7 @@ const navItems = [
       { label: 'Berita', href: '/informasi/berita' },
       { label: 'Agenda', href: '/informasi/agenda' },
       { label: 'Galeri', href: '/informasi/galeri' },
+      { label: 'Download', href: '/informasi/download' },
     ],
   },
   { label: 'Kontak', href: '/kontak' },
@@ -54,6 +57,7 @@ const navItems = [
 ];
 
 export default function Header() {
+  const schoolData = useStoreData(getSchoolData);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -100,20 +104,35 @@ export default function Header() {
             ? 'bg-white/90 dark:bg-dark-bg/90 backdrop-blur-xl shadow-lg shadow-black/5'
             : 'bg-transparent'
         }`}
+        style={isScrolled ? {
+          backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 40 40\'%3E%3Cpath d=\'M20 2L38 20L20 38L2 20Z\' fill=\'none\' stroke=\'%2310b981\' stroke-width=\'0.3\' opacity=\'0.08\'/%3E%3C/svg%3E")',
+          backgroundSize: '40px 40px',
+        } : {}}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="max-w-8xl 2xl:max-w-9xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-primary flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-emerald-900/20 group-hover:shadow-emerald-900/30 transition-all duration-300">
-                M
-              </div>
+              {schoolData.logo ? (
+                <div className="shrink-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={schoolData.logo}
+                    alt={schoolData.shortName}
+                    className="h-10 w-auto transition-all duration-300 group-hover:opacity-90"
+                  />
+                </div>
+              ) : (
+                <div className="w-10 h-10 rounded-xl bg-gradient-primary flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-emerald-900/20 group-hover:shadow-emerald-900/30 transition-all duration-300">
+                  M
+                </div>
+              )}
               <div className="hidden sm:block">
                 <h1 className="font-display font-bold text-sm md:text-base text-gray-900 dark:text-dark-text leading-tight">
-                  MTsN 2 Kebumen
+                  {schoolData.shortName}
                 </h1>
                 <p className="text-[10px] md:text-xs text-emerald-600 dark:text-emerald-400 font-medium -mt-0.5">
-                  Berkarakter • Berprestasi
+                  {schoolData.tagline}
                 </p>
               </div>
             </Link>

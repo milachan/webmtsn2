@@ -2,108 +2,97 @@
 
 import {
   Berita, GaleriItem, Testimoni, Fasilitas, NilaiUnggulan,
-  Statistik, Ekstrakurikuler, Guru, Pengumuman, Agenda,
-  TimelineEvent,
-  beritaTerbaru, galeriFoto, testimoni, fasilitas,
-  nilaiUnggulan, statistikMadrasah, ekstrakurikuler, guruTendik,
-  pengumuman, agenda, schoolData, kepalaMadrasah, visiMisi,
-  sejarahMadrasah, tataTertib, programUnggulan,
+  Ekstrakurikuler, Guru, Pengumuman, Agenda,
+  TimelineEvent, ProgramUnggulan, HeroSlide, SocialLink,
+  Statistik, Prestasi, StrukturPosisi, StrukturGuruBidang,
+  KurikulumKategori, Pembiasaan, PmbSettings,
+  schoolData as defaultSchoolData, kepalaMadrasah as defaultKepala,
+  visiMisi as defaultVisi, tataTertib as defaultTataTertib,
+  defaultHeroSlides, defaultSocialLinks, statistikMadrasah as defaultStatistik,
+  defaultStrukturOrganisasi, defaultKurikulumData, defaultPmbSettings,
 } from './data';
+export type { StrukturPosisi, StrukturGuruBidang, KurikulumKategori, Pembiasaan, PmbSettings };
 
 // ===== Re-export types =====
-export type { Berita, GaleriItem, Testimoni, Fasilitas, NilaiUnggulan, Statistik, Ekstrakurikuler, Guru, Pengumuman, Agenda, TimelineEvent };
+export type {
+  Berita, GaleriItem, Testimoni, Fasilitas, NilaiUnggulan,
+  Ekstrakurikuler, Guru, Pengumuman, Agenda, TimelineEvent,
+  ProgramUnggulan, HeroSlide, SocialLink, Statistik, Prestasi,
+};
 
-// ===== API / Storage Dual-Mode =====
-// - Lokal (default): localStorage → cocok untuk development tanpa database
-// - API (NEXT_PUBLIC_USE_API=true): panggil API routes → cocok untuk deploy dengan MySQL
-
-const USE_API = typeof window !== 'undefined' && 
-  (process.env.NEXT_PUBLIC_USE_API === 'true' || 
-   window.location.hostname !== 'localhost' && 
-   window.location.hostname !== '127.0.0.1');
-
+// ===== API Base =====
 const API_BASE = '/api/data';
 
-// ===== API Helpers =====
-async function apiGet<T>(table: string): Promise<T | null> {
-  try {
-    const res = await fetch(`${API_BASE}/${table}`);
-    if (!res.ok) return null;
-    return await res.json() as T;
-  } catch {
-    return null;
-  }
+// ===== In-memory cache =====
+interface CacheEntry<T> {
+  data: T;
+  loaded: boolean;
 }
 
-async function apiPost(table: string, data: unknown): Promise<boolean> {
-  try {
-    const res = await fetch(`${API_BASE}/${table}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    return res.ok;
-  } catch {
-    return false;
-  }
-}
+const cache: Record<string, CacheEntry<any>> = {};
+export let dataLoaded = false;
+const loadCallbacks: Array<() => void> = [];
 
-async function apiDelete(table: string, id: number): Promise<boolean> {
-  try {
-    const res = await fetch(`${API_BASE}/${table}?id=${id}`, { method: 'DELETE' });
-    return res.ok;
-  } catch {
-    return false;
-  }
-}
-
-// ===== Storage Keys =====
-const KEYS = {
-  berita: 'mtsn_admin_berita',
-  galeri: 'mtsn_admin_galeri',
-  testimoni: 'mtsn_admin_testimoni',
-  fasilitas: 'mtsn_admin_fasilitas',
-  nilaiUnggulan: 'mtsn_admin_nilai_unggulan',
-  ekstrakurikuler: 'mtsn_admin_ekstrakurikuler',
-  guru: 'mtsn_admin_guru',
-  pengumuman: 'mtsn_admin_pengumuman',
-  agenda: 'mtsn_admin_agenda',
-  schoolData: 'mtsn_admin_school_data',
-  kepalaMadrasah: 'mtsn_admin_kepala',
-  visiMisi: 'mtsn_admin_visi_misi',
-  sejarah: 'mtsn_admin_sejarah',
-  tataTertib: 'mtsn_admin_tata_tertib',
-  programUnggulan: 'mtsn_admin_program_unggulan',
-} as const;
-
-// ===== Generic Helpers =====
-function loadFromStorage<T>(key: string, fallback: T): T {
-  if (typeof window === 'undefined') return fallback;
-  try {
-    const raw = localStorage.getItem(key);
-    if (raw) return JSON.parse(raw) as T;
-  } catch { /* ignore */ }
-  return fallback;
-}
-
-function saveToStorage<T>(key: string, data: T): void {
-  if (typeof window === 'undefined') return;
-  try {
-    localStorage.setItem(key, JSON.stringify(data));
-  } catch { /* ignore */ }
-}
+// ===== Hydration guard (deprecated — getCached no longer checks this) =====
+let hydrationGuard = true;
 
 // ===== Reactive store =====
 type Listener = () => void;
 const listeners = new Set<Listener>();
 
-export function subscribe(listener: Listener) {
+export function subscribe(listener: Listener): () => void {
   listeners.add(listener);
-  return () => listeners.delete(listener);
+  return () => {
+    listeners.delete(listener);
+  };
 }
 
 function notify() {
   listeners.forEach((fn) => fn());
+}
+
+// ===== React hook for reactive store access =====
+import { useState, useEffect, useRef } from 'react';
+
+export function useStoreData<T>(getter: () => T): T {
+  const [data, setData] = useState(getter);
+  const lastRef = useRef<T>(data);
+
+  useEffect(() => {
+    const next = getter();
+    if (next !== lastRef.current) {
+      lastRef.current = next;
+      setData(next);
+    }
+    const unsub = subscribe(() => {
+      const nextVal = getter();
+      if (nextVal !== lastRef.current) {
+        lastRef.current = nextVal;
+        setData(nextVal);
+      }
+    });
+    return unsub;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return data;
+}
+
+// ===== Loading state hook =====
+export function useStoreLoading(): boolean {
+  const [loading, setLoading] = useState(!dataLoaded);
+
+  useEffect(() => {
+    if (dataLoaded) {
+      setLoading(false);
+      return;
+    }
+    const unsub = subscribe(() => {
+      if (dataLoaded) setLoading(false);
+    });
+    return unsub;
+  }, []);
+
+  return loading;
 }
 
 // ===== ID Generator =====
@@ -112,211 +101,541 @@ export function generateId(): number {
   return ++idCounter;
 }
 
-// ===== Generic CRUD Factory =====
-function createCrud<T extends { id: number }>(
-  storageKey: string,
-  apiTable: string,
-  fallbackData: T[],
-) {
-  const get = (): T[] => loadFromStorage<T[]>(storageKey, fallbackData);
+// ===== Data-loaded promise =====
+export function onDataLoaded(callback: () => void) {
+  if (dataLoaded) {
+    callback();
+  } else {
+    loadCallbacks.push(callback);
+  }
+}
 
-  return {
-    getAll: get,
+// ===== API helpers (with proper error logging) =====
+async function apiGet<T>(table: string): Promise<T[]> {
+  const res = await fetch(`${API_BASE}/${table}`, { cache: 'no-store' });
+  if (!res.ok) {
+    console.warn(`[apiGet/${table}] HTTP ${res.status} — returning empty array`);
+    return [];
+  }
+  return res.json();
+}
 
-    add: async (item: T): Promise<void> => {
-      const items = get();
-      items.push(item);
-      saveToStorage(storageKey, items);
-      if (USE_API) await apiPost(apiTable, item);
+async function apiPost<T>(table: string, data: unknown): Promise<T | null> {
+  const res = await fetch(`${API_BASE}/${table}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    console.warn(`[apiPost/${table}] HTTP ${res.status} — save failed`);
+    return null;
+  }
+  return res.json();
+}
+
+async function apiPut<T>(table: string, id: number, data: unknown): Promise<T | null> {
+  const res = await fetch(`${API_BASE}/${table}/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    console.warn(`[apiPut/${table}/${id}] HTTP ${res.status} — update failed`);
+    return null;
+  }
+  return res.json();
+}
+
+async function apiDelete(table: string, id: number): Promise<boolean> {
+  const res = await fetch(`${API_BASE}/${table}/${id}`, { method: 'DELETE' });
+  if (!res.ok) {
+    console.warn(`[apiDelete/${table}/${id}] HTTP ${res.status} — delete failed`);
+  }
+  return res.ok;
+}
+
+async function apiGetSettings(): Promise<Record<string, any>> {
+  const res = await fetch('/api/schoolsettings', { cache: 'no-store' });
+  if (!res.ok) return {};
+  return res.json();
+}
+
+async function apiPostSetting(key: string, value: unknown): Promise<boolean> {
+  const res = await fetch('/api/schoolsettings', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ key, value }),
+  });
+  if (!res.ok) {
+    console.warn(`[apiPostSetting/${key}] HTTP ${res.status} — save setting failed`);
+  }
+  return res.ok;
+}
+
+// ===== Helper to manage cache entries =====
+function getCached<T>(key: string, fallback: T): T {
+  // SSR: no cache available — return fallback directly
+  if (typeof window === 'undefined') {
+    return fallback;
+  }
+  if (!cache[key]) {
+    cache[key] = { data: fallback, loaded: false };
+  }
+  return cache[key].data as T;
+}
+
+function setCached<T>(key: string, data: T): void {
+  cache[key] = { data, loaded: true };
+}
+
+// ===== Loading promise lock =====
+let loadingPromise: Promise<void> | null = null;
+
+// ===== Load all data from API =====
+export async function loadAllData(): Promise<void> {
+  if (dataLoaded && Object.keys(cache).length > 0) {
+    return;
+  }
+  if (loadingPromise) {
+    return loadingPromise;
+  }
+
+  loadingPromise = (async () => {
+    try {
+      const tables = [
+        'berita', 'galeri', 'testimoni', 'fasilitas',
+        'ekstrakurikuler', 'guru', 'pengumuman', 'agenda',
+        'sejarah', 'programunggulan', 'nilaiunggulan', 'prestasi',
+      ] as const;
+
+      await Promise.all(
+        tables.map(async (table) => {
+          try {
+            const data = await apiGet<any>(table);
+            setCached(table, data);
+          } catch {
+            setCached(table, []);
+          }
+        })
+      );
+
+      try {
+        const settings = await apiGetSettings();
+        setCached('schoolData', settings.schoolData || defaultSchoolData);
+        setCached('kepalaMadrasah', settings.kepalaMadrasah || defaultKepala);
+        setCached('visiMisi', settings.visiMisi || defaultVisi);
+        setCached('tataTertib', settings.tataTertib || defaultTataTertib);
+        setCached('heroSlides', Array.isArray(settings.heroSlides) && settings.heroSlides.length > 0 ? settings.heroSlides : defaultHeroSlides);
+        setCached('socialLinks', Array.isArray(settings.socialLinks) && settings.socialLinks.length > 0 ? settings.socialLinks : defaultSocialLinks);
+        setCached('popupEnabled', settings.popupEnabled !== false);
+        setCached('statistik', Array.isArray(settings.statistik) && settings.statistik.length > 0 ? settings.statistik : defaultStatistik);
+        setCached('strukturOrganisasi', settings.strukturOrganisasi || defaultStrukturOrganisasi);
+        setCached('kurikulumData', Array.isArray(settings.kurikulumData) ? settings.kurikulumData : defaultKurikulumData);
+        setCached('pembiasaanData', Array.isArray(settings.pembiasaanData) ? settings.pembiasaanData : []);
+        setCached('pmbSettings', settings.pmbSettings || defaultPmbSettings);
+      } catch {
+        setCached('schoolData', defaultSchoolData);
+        setCached('kepalaMadrasah', defaultKepala);
+        setCached('visiMisi', defaultVisi);
+        setCached('tataTertib', defaultTataTertib);
+        setCached('heroSlides', defaultHeroSlides);
+        setCached('socialLinks', defaultSocialLinks);
+        setCached('popupEnabled', true);
+        setCached('statistik', defaultStatistik);
+        setCached('strukturOrganisasi', defaultStrukturOrganisasi);
+        setCached('kurikulumData', defaultKurikulumData);
+        setCached('pembiasaanData', []);
+        setCached('pmbSettings', defaultPmbSettings);
+      }
+
+      dataLoaded = true;
+      loadCallbacks.forEach((cb) => cb());
+      loadCallbacks.length = 0;
       notify();
-    },
+    } catch (e) {
+      console.error('[STORE] loadAllData FAILED:', e);
+      dataLoaded = true;
+      loadCallbacks.forEach((cb) => cb());
+      loadCallbacks.length = 0;
+    } finally {
+      loadingPromise = null;
+    }
+  })();
 
-    update: async (id: number, data: Partial<T>): Promise<void> => {
-      const items = get();
-      const idx = items.findIndex((i) => i.id === id);
-      if (idx !== -1) {
-        items[idx] = { ...items[idx], ...data };
-        saveToStorage(storageKey, items);
-        if (USE_API) await apiPost(apiTable, { id, ...data });
-        notify();
+  return loadingPromise;
+}
+
+// ===== CRUD factory =====
+function createCrud<T extends { id: number }>(
+  cacheKey: string,
+  getDefaults: () => T[],
+) {
+  return {
+    getAll: (): T[] => getCached<T[]>(cacheKey, getDefaults()),
+
+    getAllAsync: async (): Promise<T[]> => {
+      try {
+        const data = await apiGet<T>(cacheKey);
+        setCached(cacheKey, data);
+        return data;
+      } catch {
+        return getCached<T[]>(cacheKey, getDefaults());
       }
     },
 
-    remove: async (id: number): Promise<void> => {
-      const items = get();
-      saveToStorage(storageKey, items.filter((i) => i.id !== id));
-      if (USE_API) await apiDelete(apiTable, id);
-      notify();
+    add: async (item: T): Promise<boolean> => {
+      const created = await apiPost<T>(cacheKey, item);
+      if (created) {
+        const newItems = [...getCached<T[]>(cacheKey, getDefaults()), created];
+        setCached(cacheKey, newItems);
+        notify();
+        return true;
+      }
+      return false;
     },
 
-    saveAll: (items: T[]): void => {
-      saveToStorage(storageKey, items);
-      if (USE_API) items.forEach((item) => apiPost(apiTable, item));
-      notify();
+    update: async (id: number, data: Partial<T>): Promise<boolean> => {
+      const updated = await apiPut<T>(cacheKey, id, data);
+      if (updated) {
+        const items = getCached<T[]>(cacheKey, getDefaults());
+        const newItems = items.map((item) =>
+          item.id === id ? { ...item, ...updated } : item
+        );
+        setCached(cacheKey, newItems);
+        notify();
+        return true;
+      }
+      return false;
     },
 
-    getRaw: get,
+    remove: async (id: number): Promise<boolean> => {
+      const ok = await apiDelete(cacheKey, id);
+      if (ok) {
+        const items = getCached<T[]>(cacheKey, getDefaults());
+        setCached(cacheKey, items.filter((i) => i.id !== id));
+        notify();
+        return true;
+      }
+      return false;
+    },
+
+    refresh: async (): Promise<T[]> => {
+      const data = await apiGet<T>(cacheKey);
+      setCached(cacheKey, data);
+      notify();
+      return data;
+    },
   };
 }
 
 // ===== Create store instances =====
-const beritaStore = createCrud<Berita>(KEYS.berita, 'berita', beritaTerbaru);
-const galeriStore = createCrud<GaleriItem>(KEYS.galeri, 'galeri', galeriFoto);
-const testimoniStore = createCrud<Testimoni>(KEYS.testimoni, 'testimoni', testimoni);
-const fasilitasStore = createCrud<Fasilitas>(KEYS.fasilitas, 'fasilitas', fasilitas);
-const ekskulStore = createCrud<Ekstrakurikuler>(KEYS.ekstrakurikuler, 'ekstrakurikuler', ekstrakurikuler);
-const guruStore = createCrud<Guru>(KEYS.guru, 'guru', guruTendik);
-const pengumumanStore = createCrud<Pengumuman>(KEYS.pengumuman, 'pengumuman', pengumuman);
-const agendaStore = createCrud<Agenda>(KEYS.agenda, 'agenda', agenda);
+const beritaCrud = createCrud<Berita>('berita', () => {
+  try { return require('./data').beritaTerbaru || []; } catch { return []; }
+});
+const galeriCrud = createCrud<GaleriItem>('galeri', () => {
+  try { return require('./data').galeriFoto || []; } catch { return []; }
+});
+const testimoniCrud = createCrud<Testimoni>('testimoni', () => {
+  try { return require('./data').testimoni || []; } catch { return []; }
+});
+const fasilitasCrud = createCrud<Fasilitas>('fasilitas', () => {
+  try { return require('./data').fasilitas || []; } catch { return []; }
+});
+const ekskulCrud = createCrud<Ekstrakurikuler>('ekstrakurikuler', () => {
+  try { return require('./data').ekstrakurikuler || []; } catch { return []; }
+});
+const guruCrud = createCrud<Guru>('guru', () => {
+  try { return require('./data').guruTendik || []; } catch { return []; }
+});
+const pengumumanCrud = createCrud<Pengumuman>('pengumuman', () => {
+  try { return require('./data').pengumuman || []; } catch { return []; }
+});
+const agendaCrud = createCrud<Agenda>('agenda', () => {
+  try { return require('./data').agenda || []; } catch { return []; }
+});
+const sejarahCrud = createCrud<TimelineEvent>('sejarah', () => {
+  try { return require('./data').sejarahMadrasah || []; } catch { return []; }
+});
+const programCrud = createCrud<ProgramUnggulan>('programunggulan', () => {
+  try { return require('./data').programUnggulan || []; } catch { return []; }
+});
+const nilaiCrud = createCrud<NilaiUnggulan>('nilaiunggulan', () => {
+  try { return require('./data').nilaiUnggulan || []; } catch { return []; }
+});
+const prestasiCrud = createCrud<Prestasi>('prestasi', () => {
+  try { return require('./data').prestasiData || []; } catch { return []; }
+});
 
 // ===== Berita =====
-export function getBerita(): Berita[] { return beritaStore.getRaw(); }
-export function saveBerita(items: Berita[]): void { beritaStore.saveAll(items); }
-export function addBerita(item: Berita): void { beritaStore.add(item); }
-export function updateBerita(id: number, data: Partial<Berita>): void { beritaStore.update(id, data); }
-export function deleteBerita(id: number): void { beritaStore.remove(id); }
+export function getBerita(): Berita[] { return beritaCrud.getAll(); }
+export async function loadBerita(): Promise<Berita[]> { return beritaCrud.getAllAsync(); }
+export async function addBerita(item: Berita): Promise<boolean> { return beritaCrud.add(item); }
+export async function updateBerita(id: number, data: Partial<Berita>): Promise<boolean> { return beritaCrud.update(id, data); }
+export async function deleteBerita(id: number): Promise<boolean> { return beritaCrud.remove(id); }
 
 // ===== Galeri =====
-export function getGaleri(): GaleriItem[] { return galeriStore.getRaw(); }
-export function saveGaleri(items: GaleriItem[]): void { galeriStore.saveAll(items); }
-export function addGaleri(item: GaleriItem): void { galeriStore.add(item); }
-export function updateGaleri(id: number, data: Partial<GaleriItem>): void { galeriStore.update(id, data); }
-export function deleteGaleri(id: number): void { galeriStore.remove(id); }
+export function getGaleri(): GaleriItem[] { return galeriCrud.getAll(); }
+export async function loadGaleri(): Promise<GaleriItem[]> { return galeriCrud.getAllAsync(); }
+export async function addGaleri(item: GaleriItem): Promise<boolean> { return galeriCrud.add(item); }
+export async function updateGaleri(id: number, data: Partial<GaleriItem>): Promise<boolean> { return galeriCrud.update(id, data); }
+export async function deleteGaleri(id: number): Promise<boolean> { return galeriCrud.remove(id); }
 
 // ===== Testimoni =====
-export function getTestimoni(): Testimoni[] { return testimoniStore.getRaw(); }
-export function saveTestimoni(items: Testimoni[]): void { testimoniStore.saveAll(items); }
-export function addTestimoni(item: Testimoni): void { testimoniStore.add(item); }
-export function updateTestimoni(id: number, data: Partial<Testimoni>): void { testimoniStore.update(id, data); }
-export function deleteTestimoni(id: number): void { testimoniStore.remove(id); }
+export function getTestimoni(): Testimoni[] { return testimoniCrud.getAll(); }
+export async function loadTestimoni(): Promise<Testimoni[]> { return testimoniCrud.getAllAsync(); }
+export async function addTestimoni(item: Testimoni): Promise<boolean> { return testimoniCrud.add(item); }
+export async function updateTestimoni(id: number, data: Partial<Testimoni>): Promise<boolean> { return testimoniCrud.update(id, data); }
+export async function deleteTestimoni(id: number): Promise<boolean> { return testimoniCrud.remove(id); }
 
 // ===== Fasilitas =====
-export function getFasilitas(): Fasilitas[] { return fasilitasStore.getRaw(); }
-export function saveFasilitas(items: Fasilitas[]): void { fasilitasStore.saveAll(items); }
-export function addFasilitas(item: Fasilitas): void { fasilitasStore.add(item); }
-export function updateFasilitas(id: number, data: Partial<Fasilitas>): void { fasilitasStore.update(id, data); }
-export function deleteFasilitas(id: number): void { fasilitasStore.remove(id); }
+export function getFasilitas(): Fasilitas[] { return fasilitasCrud.getAll(); }
+export async function loadFasilitas(): Promise<Fasilitas[]> { return fasilitasCrud.getAllAsync(); }
+export async function addFasilitas(item: Fasilitas): Promise<boolean> { return fasilitasCrud.add(item); }
+export async function updateFasilitas(id: number, data: Partial<Fasilitas>): Promise<boolean> { return fasilitasCrud.update(id, data); }
+export async function deleteFasilitas(id: number): Promise<boolean> { return fasilitasCrud.remove(id); }
 
 // ===== Ekstrakurikuler =====
-export function getEkstrakurikuler(): Ekstrakurikuler[] { return ekskulStore.getRaw(); }
-export function saveEkstrakurikuler(items: Ekstrakurikuler[]): void { ekskulStore.saveAll(items); }
-export function addEkstrakurikuler(item: Ekstrakurikuler): void { ekskulStore.add(item); }
-export function updateEkstrakurikuler(id: number, data: Partial<Ekstrakurikuler>): void { ekskulStore.update(id, data); }
-export function deleteEkstrakurikuler(id: number): void { ekskulStore.remove(id); }
+export function getEkstrakurikuler(): Ekstrakurikuler[] { return ekskulCrud.getAll(); }
+export async function loadEkstrakurikuler(): Promise<Ekstrakurikuler[]> { return ekskulCrud.getAllAsync(); }
+export async function addEkstrakurikuler(item: Ekstrakurikuler): Promise<boolean> { return ekskulCrud.add(item); }
+export async function updateEkstrakurikuler(id: number, data: Partial<Ekstrakurikuler>): Promise<boolean> { return ekskulCrud.update(id, data); }
+export async function deleteEkstrakurikuler(id: number): Promise<boolean> { return ekskulCrud.remove(id); }
 
 // ===== Guru =====
-export function getGuru(): Guru[] { return guruStore.getRaw(); }
-export function saveGuru(items: Guru[]): void { guruStore.saveAll(items); }
-export function addGuru(item: Guru): void { guruStore.add(item); }
-export function updateGuru(id: number, data: Partial<Guru>): void { guruStore.update(id, data); }
-export function deleteGuru(id: number): void { guruStore.remove(id); }
+export function getGuru(): Guru[] { return guruCrud.getAll(); }
+export async function loadGuru(): Promise<Guru[]> { return guruCrud.getAllAsync(); }
+export async function addGuru(item: Guru): Promise<boolean> { return guruCrud.add(item); }
+export async function updateGuru(id: number, data: Partial<Guru>): Promise<boolean> { return guruCrud.update(id, data); }
+export async function deleteGuru(id: number): Promise<boolean> { return guruCrud.remove(id); }
 
 // ===== Pengumuman =====
-export function getPengumuman(): Pengumuman[] { return pengumumanStore.getRaw(); }
-export function savePengumuman(items: Pengumuman[]): void { pengumumanStore.saveAll(items); }
-export function addPengumuman(item: Pengumuman): void { pengumumanStore.add(item); }
-export function updatePengumuman(id: number, data: Partial<Pengumuman>): void { pengumumanStore.update(id, data); }
-export function deletePengumuman(id: number): void { pengumumanStore.remove(id); }
+export function getPengumuman(): Pengumuman[] { return pengumumanCrud.getAll(); }
+export async function loadPengumuman(): Promise<Pengumuman[]> { return pengumumanCrud.getAllAsync(); }
+export async function addPengumuman(item: Pengumuman): Promise<boolean> { return pengumumanCrud.add(item); }
+export async function updatePengumuman(id: number, data: Partial<Pengumuman>): Promise<boolean> { return pengumumanCrud.update(id, data); }
+export async function deletePengumuman(id: number): Promise<boolean> { return pengumumanCrud.remove(id); }
 
 // ===== Agenda =====
-export function getAgenda(): Agenda[] { return agendaStore.getRaw(); }
-export function saveAgenda(items: Agenda[]): void { agendaStore.saveAll(items); }
-export function addAgenda(item: Agenda): void { agendaStore.add(item); }
-export function updateAgenda(id: number, data: Partial<Agenda>): void { agendaStore.update(id, data); }
-export function deleteAgenda(id: number): void { agendaStore.remove(id); }
-
-// ===== School Data =====
-export function getSchoolData() {
-  return loadFromStorage(KEYS.schoolData, schoolData);
-}
-export function saveSchoolData(data: typeof schoolData): void {
-  saveToStorage(KEYS.schoolData, data);
-  if (USE_API) apiPost('schoolsetting', { key: 'schoolData', value: JSON.stringify(data) });
-  notify();
-}
-
-// ===== Kepala Madrasah =====
-export function getKepalaMadrasah() {
-  return loadFromStorage(KEYS.kepalaMadrasah, kepalaMadrasah);
-}
-export function saveKepalaMadrasah(data: typeof kepalaMadrasah): void {
-  saveToStorage(KEYS.kepalaMadrasah, data);
-  if (USE_API) apiPost('schoolsetting', { key: 'kepalaMadrasah', value: JSON.stringify(data) });
-  notify();
-}
-
-// ===== Visi Misi =====
-export function getVisiMisi() {
-  return loadFromStorage(KEYS.visiMisi, visiMisi);
-}
-export function saveVisiMisi(data: typeof visiMisi): void {
-  saveToStorage(KEYS.visiMisi, data);
-  if (USE_API) apiPost('schoolsetting', { key: 'visiMisi', value: JSON.stringify(data) });
-  notify();
-}
+export function getAgenda(): Agenda[] { return agendaCrud.getAll(); }
+export async function loadAgenda(): Promise<Agenda[]> { return agendaCrud.getAllAsync(); }
+export async function addAgenda(item: Agenda): Promise<boolean> { return agendaCrud.add(item); }
+export async function updateAgenda(id: number, data: Partial<Agenda>): Promise<boolean> { return agendaCrud.update(id, data); }
+export async function deleteAgenda(id: number): Promise<boolean> { return agendaCrud.remove(id); }
 
 // ===== Sejarah =====
-export function getSejarah(): TimelineEvent[] {
-  return loadFromStorage<TimelineEvent[]>(KEYS.sejarah, sejarahMadrasah);
-}
-export function saveSejarah(data: TimelineEvent[]): void {
-  saveToStorage(KEYS.sejarah, data);
-  if (USE_API) data.forEach((item) => apiPost('sejarah', item));
-  notify();
-}
-
-// ===== Tata Tertib =====
-export function getTataTertib() {
-  return loadFromStorage(KEYS.tataTertib, tataTertib);
-}
-export function saveTataTertib(data: typeof tataTertib): void {
-  saveToStorage(KEYS.tataTertib, data);
-  if (USE_API) apiPost('schoolsetting', { key: 'tataTertib', value: JSON.stringify(data) });
-  notify();
-}
-
-// ===== Program Unggulan =====
-export function getProgramUnggulan() {
-  return loadFromStorage(KEYS.programUnggulan, programUnggulan);
-}
-export function saveProgramUnggulan(data: typeof programUnggulan): void {
-  saveToStorage(KEYS.programUnggulan, data);
-  if (USE_API) data.forEach((item) => apiPost('programunggulan', item));
-  notify();
-}
-
-// ===== Nilai Unggulan =====
-export function getNilaiUnggulan(): NilaiUnggulan[] {
-  return loadFromStorage<NilaiUnggulan[]>(KEYS.nilaiUnggulan, nilaiUnggulan);
-}
-export function saveNilaiUnggulan(items: NilaiUnggulan[]): void {
-  saveToStorage(KEYS.nilaiUnggulan, items);
-  if (USE_API) items.forEach((item) => apiPost('nilaiunggulan', item));
-  notify();
-}
-
-// ===== Reset All =====
-export function resetAllData(): void {
-  Object.values(KEYS).forEach((key) => {
-    try { localStorage.removeItem(key); } catch { /* ignore */ }
-  });
-  notify();
-}
-
-// ===== Sync from API to localStorage =====
-export async function syncFromApi(): Promise<boolean> {
-  if (!USE_API) return false;
+export function getSejarah(): TimelineEvent[] { return sejarahCrud.getAll(); }
+export async function loadSejarah(): Promise<TimelineEvent[]> { return sejarahCrud.getAllAsync(); }
+export async function addSejarah(item: TimelineEvent): Promise<boolean> { return sejarahCrud.add(item); }
+export async function updateSejarah(id: number, data: Partial<TimelineEvent>): Promise<boolean> { return sejarahCrud.update(id, data); }
+export async function deleteSejarah(id: number): Promise<boolean> { return sejarahCrud.remove(id); }
+export async function saveSejarah(data: TimelineEvent[]): Promise<boolean> {
   try {
-    const tables = ['berita', 'galeri', 'testimoni', 'fasilitas', 'ekstrakurikuler', 'guru', 'pengumuman', 'agenda', 'sejarah', 'programunggulan', 'nilaiunggulan'] as const;
-    for (const table of tables) {
-      const data = await apiGet<any[]>(table);
-      if (data && data.length > 0) {
-        localStorage.setItem(`mtsn_admin_${table}`, JSON.stringify(data));
-      }
+    const current = getSejarah();
+    for (const item of current) {
+      await sejarahCrud.remove(item.id);
     }
-    notify();
+    for (const item of data) {
+      await sejarahCrud.add(item);
+    }
     return true;
   } catch {
     return false;
+  }
+}
+
+// ===== Program Unggulan =====
+export function getProgramUnggulan(): ProgramUnggulan[] { return programCrud.getAll(); }
+export async function loadProgramUnggulan(): Promise<ProgramUnggulan[]> { return programCrud.getAllAsync(); }
+export async function addProgramUnggulan(item: ProgramUnggulan): Promise<boolean> { return programCrud.add(item); }
+export async function updateProgramUnggulan(id: number, data: Partial<ProgramUnggulan>): Promise<boolean> { return programCrud.update(id, data); }
+export async function deleteProgramUnggulan(id: number): Promise<boolean> { return programCrud.remove(id); }
+export async function saveProgramUnggulan(data: ProgramUnggulan[]): Promise<boolean> {
+  try {
+    const current = getProgramUnggulan();
+    for (const item of current) {
+      await programCrud.remove(item.id);
+    }
+    for (const item of data) {
+      await programCrud.add(item);
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// ===== Prestasi =====
+export function getPrestasi(): Prestasi[] { return prestasiCrud.getAll(); }
+export async function loadPrestasi(): Promise<Prestasi[]> { return prestasiCrud.getAllAsync(); }
+export async function addPrestasi(item: Prestasi): Promise<boolean> { return prestasiCrud.add(item); }
+export async function updatePrestasi(id: number, data: Partial<Prestasi>): Promise<boolean> { return prestasiCrud.update(id, data); }
+export async function deletePrestasi(id: number): Promise<boolean> { return prestasiCrud.remove(id); }
+
+// ===== Nilai Unggulan =====
+export function getNilaiUnggulan(): NilaiUnggulan[] { return nilaiCrud.getAll(); }
+export async function loadNilaiUnggulan(): Promise<NilaiUnggulan[]> { return nilaiCrud.getAllAsync(); }
+export async function addNilaiUnggulan(item: NilaiUnggulan): Promise<boolean> { return nilaiCrud.add(item); }
+export async function updateNilaiUnggulan(id: number, data: Partial<NilaiUnggulan>): Promise<boolean> { return nilaiCrud.update(id, data); }
+export async function deleteNilaiUnggulan(id: number): Promise<boolean> { return nilaiCrud.remove(id); }
+export async function saveNilaiUnggulan(data: NilaiUnggulan[]): Promise<boolean> {
+  try {
+    const current = getNilaiUnggulan();
+    for (const item of current) {
+      await nilaiCrud.remove(item.id);
+    }
+    for (const item of data) {
+      await nilaiCrud.add(item);
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// ===== School Settings =====
+function getSettingCached<T>(key: string, fallback: T): T {
+  return getCached<T>(key, fallback);
+}
+
+function setSettingCached<T>(key: string, data: T): void {
+  setCached(key, data);
+}
+
+function saveSettingWithCache<T>(cacheKey: string, data: T, apiKey: string): Promise<boolean> {
+  const prevData = getSettingCached<T>(cacheKey, data as any);
+  setSettingCached(cacheKey, data);
+  notify(); // Update UI immediately for responsiveness
+  return apiPostSetting(apiKey, data).then((ok) => {
+    if (!ok) {
+      console.warn(`[saveSetting/${apiKey}] API failed — rolling back cache`);
+      setSettingCached(cacheKey, prevData);
+      notify();
+      return false;
+    }
+    return true;
+  });
+}
+
+export function getSchoolData() { return getSettingCached('schoolData', defaultSchoolData); }
+export async function saveSchoolData(data: typeof defaultSchoolData): Promise<boolean> {
+  return saveSettingWithCache('schoolData', data as any, 'schoolData');
+}
+
+export function getKepalaMadrasah() { return getSettingCached('kepalaMadrasah', defaultKepala); }
+export async function saveKepalaMadrasah(data: typeof defaultKepala): Promise<boolean> {
+  return saveSettingWithCache('kepalaMadrasah', data as any, 'kepalaMadrasah');
+}
+
+export function getVisiMisi() { return getSettingCached('visiMisi', defaultVisi); }
+export async function saveVisiMisi(data: typeof defaultVisi): Promise<boolean> {
+  return saveSettingWithCache('visiMisi', data as any, 'visiMisi');
+}
+
+export function getTataTertib() { return getSettingCached('tataTertib', defaultTataTertib); }
+export async function saveTataTertib(data: typeof defaultTataTertib): Promise<boolean> {
+  return saveSettingWithCache('tataTertib', data as any, 'tataTertib');
+}
+
+export function getHeroSlides(): HeroSlide[] { return getSettingCached('heroSlides', defaultHeroSlides); }
+export async function saveHeroSlides(items: HeroSlide[]): Promise<boolean> {
+  return saveSettingWithCache('heroSlides', items as any, 'heroSlides');
+}
+
+export function getSocialLinks(): SocialLink[] { return getSettingCached('socialLinks', defaultSocialLinks); }
+export async function saveSocialLinks(items: SocialLink[]): Promise<boolean> {
+  return saveSettingWithCache('socialLinks', items as any, 'socialLinks');
+}
+
+export function getPopupEnabled(): boolean { return getSettingCached('popupEnabled', true); }
+export async function savePopupEnabled(enabled: boolean): Promise<boolean> {
+  return saveSettingWithCache('popupEnabled', enabled as any, 'popupEnabled');
+}
+
+export function getStatistik() { return getSettingCached('statistik', defaultStatistik); }
+export async function saveStatistik(data: typeof defaultStatistik): Promise<boolean> {
+  return saveSettingWithCache('statistik', data as any, 'statistik');
+}
+
+export function getStrukturOrganisasi() { return getSettingCached('strukturOrganisasi', defaultStrukturOrganisasi); }
+export async function saveStrukturOrganisasi(data: typeof defaultStrukturOrganisasi): Promise<boolean> {
+  return saveSettingWithCache('strukturOrganisasi', data as any, 'strukturOrganisasi');
+}
+
+export function getKurikulumData(): KurikulumKategori[] { return getSettingCached('kurikulumData', defaultKurikulumData); }
+export async function saveKurikulumData(data: KurikulumKategori[]): Promise<boolean> {
+  return saveSettingWithCache('kurikulumData', data as any, 'kurikulumData');
+}
+
+export function getPembiasaanData(): Pembiasaan[] { return getSettingCached('pembiasaanData', []); }
+export async function savePembiasaanData(data: Pembiasaan[]): Promise<boolean> {
+  return saveSettingWithCache('pembiasaanData', data as any, 'pembiasaanData');
+}
+
+export function getPmbSettings(): PmbSettings { return getSettingCached('pmbSettings', defaultPmbSettings); }
+export async function savePmbSettings(data: PmbSettings): Promise<boolean> {
+  return saveSettingWithCache('pmbSettings', data as any, 'pmbSettings');
+}
+
+// ===== Reset All =====
+export async function resetAllData(): Promise<void> {
+  const tableNames = [
+    'berita', 'galeri', 'testimoni', 'fasilitas',
+    'ekstrakurikuler', 'guru', 'pengumuman', 'agenda',
+    'sejarah', 'programunggulan', 'nilaiunggulan', 'prestasi',
+  ];
+
+  for (const table of tableNames) {
+    try {
+      const items = getCached<any[]>(table, []);
+      for (const item of items) {
+        await apiDelete(table, item.id);
+      }
+      setCached(table, []);
+    } catch { /* ignore */ }
+  }
+
+  notify();
+}
+
+// ===== Seed default data if empty (per-table) =====
+export async function seedIfEmpty(): Promise<void> {
+  try {
+    const {
+      beritaTerbaru, galeriFoto, testimoni,
+      fasilitas, ekstrakurikuler, guruTendik,
+      pengumuman, agenda, sejarahMadrasah,
+      programUnggulan, nilaiUnggulan, prestasiData,
+    } = await import('./data');
+
+    const tables = [
+      { name: 'berita', items: beritaTerbaru, getter: getBerita },
+      { name: 'galeri', items: galeriFoto, getter: getGaleri },
+      { name: 'testimoni', items: testimoni, getter: getTestimoni },
+      { name: 'fasilitas', items: fasilitas, getter: getFasilitas },
+      { name: 'ekstrakurikuler', items: ekstrakurikuler, getter: getEkstrakurikuler },
+      { name: 'guru', items: guruTendik, getter: getGuru },
+      { name: 'pengumuman', items: pengumuman, getter: getPengumuman },
+      { name: 'agenda', items: agenda, getter: getAgenda },
+      { name: 'sejarah', items: sejarahMadrasah, getter: getSejarah },
+      { name: 'programunggulan', items: programUnggulan, getter: getProgramUnggulan },
+      { name: 'nilaiunggulan', items: nilaiUnggulan, getter: getNilaiUnggulan },
+      { name: 'prestasi', items: prestasiData, getter: getPrestasi },
+    ] as const;
+
+    await Promise.all(
+      tables.map(async ({ name, items, getter }) => {
+        // Only seed this specific table if its cache is still empty
+        if (getter().length > 0 || items.length === 0) return;
+        for (const item of items as any[]) {
+          await apiPost(name, item);
+        }
+        const data = await apiGet<any>(name);
+        setCached(name, data);
+      })
+    );
+
+    notify();
+  } catch (e) {
+    console.error('Seed failed (database may already have data):', e);
   }
 }

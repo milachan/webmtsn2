@@ -4,13 +4,13 @@ import { motion } from 'framer-motion';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import Link from 'next/link';
 import Icon from '@/components/ui/Icon';
-import { getKepalaMadrasah } from '@/lib/adminStore';
+import { useStoreData, getKepalaMadrasah } from '@/lib/adminStore';
 
 export default function SambutanSection() {
-  const kepalaMadrasah = getKepalaMadrasah();
+  const kepalaMadrasah = useStoreData(getKepalaMadrasah);
   return (
     <section className="py-20 bg-emerald-50/50 dark:bg-dark-bg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="max-w-8xl 2xl:max-w-9xl mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
           {/* Left: Sticky Photo */}
           <div className="lg:sticky lg:top-24">

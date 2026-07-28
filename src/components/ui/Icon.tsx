@@ -4,10 +4,11 @@ import {
   Building2, FlaskConical, Monitor, Library, Compass, Flag, Bot,
   Music, Music2, Target, PenTool, Heart, MessageSquare, Crosshair,
   Phone, Mail, MapPin, Clock, Calendar, ChevronRight, ChevronLeft,
-  Menu, X, Search, Sun, Moon, ArrowRight, ArrowUp, ExternalLink,
+  Menu, X, Search, Sun, Moon, ArrowRight, ArrowUp, ArrowDown, ExternalLink,
   Play, ChevronDown, Quote, Image, Film, Camera, Send,
   MessageCircle, PhoneCall, Check, AlertCircle, Info, Bookmark,
-  Footprints, Eye, Trash2, Settings, Sliders, type LucideIcon
+  Footprints, Eye, Trash2, Settings, Sliders, FileText, GripVertical,
+  Inbox, RefreshCw, Save, Plus, Lock, LogIn, EyeOff, type LucideIcon
 } from 'lucide-react';
 
 const iconMap: Record<string, LucideIcon> = {
@@ -65,10 +66,20 @@ const iconMap: Record<string, LucideIcon> = {
   'message-circle': MessageCircle,
   'phone-call': PhoneCall,
   check: Check,
+  'arrow-down': ArrowDown,
+  'file-text': FileText,
   'alert-circle': AlertCircle,
   info: Info,
   bookmark: Bookmark,
   eye: Eye,
+  'grip-vertical': GripVertical,
+  inbox: Inbox,
+  'refresh-cw': RefreshCw,
+  save: Save,
+  plus: Plus,
+  lock: Lock,
+  'log-in': LogIn,
+  'eye-off': EyeOff,
 };
 
 interface IconProps {

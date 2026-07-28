@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Icon from '@/components/ui/Icon';
 import AdminFormModal from './AdminFormModal';
 import {
-  getNilaiUnggulan, saveNilaiUnggulan, generateId,
+  useStoreData, getNilaiUnggulan, saveNilaiUnggulan, generateId,
   NilaiUnggulan,
 } from '@/lib/adminStore';
 
@@ -19,24 +19,21 @@ const formFields = [
 ];
 
 export default function AdminNilaiUnggulan() {
-  const [items, setItems] = useState<NilaiUnggulan[]>([]);
+  const items = useStoreData(getNilaiUnggulan);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<NilaiUnggulan | null>(null);
 
-  useEffect(() => { setItems(getNilaiUnggulan()); }, []);
-
-  const refresh = () => setItems(getNilaiUnggulan());
-
-  const handleSave = (data: Record<string, string>) => {
+  const handleSave = async (data: Record<string, string>): Promise<boolean> => {
+    let ok: boolean;
     if (editingItem) {
       const updated = items.map((item) =>
         item.id === editingItem.id
           ? { ...item, title: data.title, description: data.description, icon: data.icon, highlight: data.highlight === 'true' }
           : item
       );
-      saveNilaiUnggulan(updated);
+      ok = await saveNilaiUnggulan(updated);
     } else {
-      saveNilaiUnggulan([...items, {
+      ok = await saveNilaiUnggulan([...items, {
         id: generateId(),
         title: data.title,
         description: data.description,
@@ -44,9 +41,10 @@ export default function AdminNilaiUnggulan() {
         highlight: data.highlight === 'true',
       }]);
     }
+    if (!ok) return false;
     setEditingItem(null);
     setModalOpen(false);
-    refresh();
+    return true;
   };
 
   const handleEdit = (item: NilaiUnggulan) => {
@@ -57,7 +55,6 @@ export default function AdminNilaiUnggulan() {
   const handleDelete = (id: number) => {
     if (confirm('Yakin ingin menghapus ini?')) {
       saveNilaiUnggulan(items.filter((i) => i.id !== id));
-      refresh();
     }
   };
 
@@ -82,10 +79,10 @@ export default function AdminNilaiUnggulan() {
               : 'border-gray-100 dark:border-dark-border'
           }`}>
             <div className="absolute top-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-              <button onClick={() => handleEdit(item)} className="p-1.5 rounded-lg text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors">
+              <button onClick={() => handleEdit(item)} className="p-1.5 rounded-lg text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors" aria-label="Edit nilai unggulan">
                 <Icon name="pen-tool" size={14} />
               </button>
-              <button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+              <button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors" aria-label="Hapus nilai unggulan">
                 <Icon name="trash-2" size={14} />
               </button>
             </div>

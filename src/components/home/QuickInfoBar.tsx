@@ -21,9 +21,9 @@ const items: InfoItem[] = [
 
 const categoryStyles: Record<string, string> = {
   PMB: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300',
-  PRESTASI: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
+  PRESTASI: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300',
   AGENDA: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
-  INFORMASI: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300',
+  INFORMASI: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-300',
   PENGUMUMAN: 'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300',
 };
 
@@ -35,7 +35,7 @@ export default function QuickInfoBar() {
       {/* Subtle background pattern */}
       <div className="absolute inset-0 bg-gradient-to-r from-emerald-50/30 via-transparent to-emerald-50/30 dark:from-emerald-900/5 dark:to-emerald-900/5" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-4">
+      <div className="relative max-w-8xl 2xl:max-w-9xl mx-auto px-4 sm:px-6 py-4">
         <div className="flex items-center gap-4">
           {/* Label */}
           <motion.div

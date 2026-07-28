@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 import './globals.css';
 import ClientLayout from '@/components/layout/ClientLayout';
 
+// Prevent Full Route Cache — ensure fresh RSC payload on every navigation
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: {
     default: 'MTs Negeri 2 Kebumen — Madrasah Unggul, Berkarakter, Berprestasi',

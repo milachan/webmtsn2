@@ -5,26 +5,43 @@ import { motion } from 'framer-motion';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import Icon from '@/components/ui/Icon';
 import Button from '@/components/ui/Button';
-import { schoolData } from '@/lib/data';
+import { useStoreData, getSchoolData } from '@/lib/adminStore';
 
 export default function KontakPage() {
+  const schoolData = useStoreData(getSchoolData);
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 3000);
+    setSending(true);
+    setError('');
+    try {
+      const res = await fetch('/api/pesan-masuk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) throw new Error('Gagal mengirim pesan');
+      setSubmitted(true);
+      setFormData({ name: '', email: '', subject: '', message: '' });
+      setTimeout(() => setSubmitted(false), 3000);
+    } catch (err: any) {
+      setError(err.message || 'Terjadi kesalahan');
+    }
+    setSending(false);
   };
 
   return (
     <main className="pt-24">
       <section className="relative py-16 bg-gradient-to-br from-emerald-900 via-emerald-800 to-green-900 overflow-hidden">
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'60\' height=\'60\' viewBox=\'0 0 60 60\'%3E%3Cpath d=\'M30 2L58 30L30 58L2 30Z\' fill=\'none\' stroke=\'white\' stroke-width=\'0.5\'/%3E%3C/svg%3E")' }} />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="relative z-10 max-w-8xl 2xl:max-w-9xl mx-auto px-4 sm:px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="text-fluid-hero font-bold text-white mb-3">Kontak</h1>
-            <p className="text-lg text-white/70">Hubungi MTs Negeri 2 Kebumen</p>
+            <p className="text-lg text-white/85">Hubungi MTs Negeri 2 Kebumen</p>
           </motion.div>
         </div>
       </section>
@@ -103,9 +120,14 @@ export default function KontakPage() {
                         className="w-full px-4 py-3 rounded-xl bg-white dark:bg-dark-bg border border-gray-200 dark:border-dark-border text-gray-900 dark:text-dark-text focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all outline-none resize-none"
                         placeholder="Tulis pesan Anda..." />
                     </div>
-                    <Button type="submit" size="lg" className="w-full">
+                    {error && (
+                      <div className="text-sm text-red-600 bg-red-50 dark:bg-red-900/20 px-4 py-2 rounded-xl border border-red-200">
+                        {error}
+                      </div>
+                    )}
+                    <Button type="submit" size="lg" className="w-full" disabled={sending}>
                       <Icon name="send" size={18} />
-                      Kirim Pesan
+                      {sending ? 'Mengirim...' : 'Kirim Pesan'}
                     </Button>
                   </form>
                 )}

@@ -16,9 +16,20 @@ import AdminSettings from '@/components/admin/AdminSettings';
 import AdminSejarah from '@/components/admin/AdminSejarah';
 import AdminProgram from '@/components/admin/AdminProgram';
 import AdminNilaiUnggulan from '@/components/admin/AdminNilaiUnggulan';
+import AdminHeroSlides from '@/components/admin/AdminHeroSlides';
+import AdminPrestasi from '@/components/admin/AdminPrestasi';
+import AdminVisiMisi from '@/components/admin/AdminVisiMisi';
+import AdminStrukturOrganisasi from '@/components/admin/AdminStrukturOrganisasi';
+import AdminKurikulum from '@/components/admin/AdminKurikulum';
+import AdminPembiasaan from '@/components/admin/AdminPembiasaan';
+import AdminTataTertib from '@/components/admin/AdminTataTertib';
+import AdminPesanMasuk from '@/components/admin/AdminPesanMasuk';
+import AdminPmb from '@/components/admin/AdminPmb';
+import AdminLokasi from '@/components/admin/AdminLokasi';
 
 function AdminContent() {
   const searchParams = useSearchParams();
+
   const section = searchParams.get('section') || 'dashboard';
 
   const renderSection = () => {
@@ -34,7 +45,17 @@ function AdminContent() {
       case 'settings': return <AdminSettings />;
       case 'sejarah': return <AdminSejarah />;
       case 'nilainunggulan': return <AdminNilaiUnggulan />;
+      case 'hero': return <AdminHeroSlides />;
       case 'program': return <AdminProgram />;
+      case 'prestasi': return <AdminPrestasi />;
+      case 'visimisi': return <AdminVisiMisi />;
+      case 'strukturorganisasi': return <AdminStrukturOrganisasi />;
+      case 'kurikulum': return <AdminKurikulum />;
+      case 'pembiasaan': return <AdminPembiasaan />;
+      case 'tatatertib': return <AdminTataTertib />;
+      case 'pesanmasuk': return <AdminPesanMasuk />;
+      case 'pmb': return <AdminPmb />;
+      case 'lokasi': return <AdminLokasi />;
       default: return <AdminDashboard />;
     }
   };

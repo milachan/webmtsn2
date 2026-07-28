@@ -111,9 +111,29 @@ model ProgramUnggulan {
   icon        String
 }
 
+// ===== Prestasi (Achievements) =====
+model Prestasi {
+  id       Int    @id @default(autoincrement())
+  tahun    String
+  bidang   String
+  prestasi String
+  tingkat  String
+}
+
 // ===== School Settings (key-value store) =====
 model SchoolSetting {
-  id    Int    @id @default(autoincrement())
-  key   String @unique
-  value String // JSON string
+  id    Int         @id @default(autoincrement())
+  key   String      @unique
+  value String      @db.Text // JSON string (using TEXT to allow large values)
+}
+
+// ===== Pesan Masuk (Contact Messages) =====
+model PesanMasuk {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  subject   String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
 }

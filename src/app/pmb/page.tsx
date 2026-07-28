@@ -1,44 +1,55 @@
 'use client';
 
+import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import Button from '@/components/ui/Button';
 import Icon from '@/components/ui/Icon';
-
-const pmbSteps = [
-  { number: 1, title: 'Registrasi Online', description: 'Daftar melalui website resmi atau datang langsung ke madrasah' },
-  { number: 2, title: 'Verifikasi Berkas', description: 'Serahkan berkas persyaratan untuk diverifikasi oleh panitia' },
-  { number: 3, title: 'Tes Seleksi', description: 'Ikuti tes akademik dan wawancara yang telah dijadwalkan' },
-  { number: 4, title: 'Pengumuman', description: 'Hasil seleksi diumumkan melalui website dan papan pengumuman' },
-  { number: 5, title: 'Daftar Ulang', description: 'Lakukan daftar ulang dan pembayaran administrasi' },
-];
-
-const requirements = [
-  'Fotokopi Akta Kelahiran (2 lembar)',
-  'Fotokopi Kartu Keluarga (2 lembar)',
-  'Pas foto 3x4 (4 lembar, background merah)',
-  'Fotokopi Raport SD/MI semester 1-5',
-  'Surat Keterangan Dokter',
-  'Mengisi formulir pendaftaran',
-];
+import { useStoreData, getPmbSettings } from '@/lib/adminStore';
 
 export default function PMBPage() {
+  const pmb = useStoreData(getPmbSettings);
+
+  // Redirect mode — arahkan ke URL eksternal
+  useEffect(() => {
+    if (pmb.mode === 'redirect' && pmb.redirectUrl) {
+      window.location.href = pmb.redirectUrl;
+    }
+  }, [pmb.mode, pmb.redirectUrl]);
+
+  // Saat loading atau redirect, tampilkan halaman kosong / loading
+  if (pmb.mode === 'redirect') {
+    return (
+      <main className="pt-24 min-h-screen flex items-center justify-center bg-white dark:bg-dark-bg">
+        <div className="text-center">
+          <svg className="animate-spin h-10 w-10 text-emerald-500 mx-auto mb-4" viewBox="0 0 24 24" fill="none">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+          </svg>
+          <p className="text-sm text-gray-500">Mengarahkan ke halaman PMB...</p>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="pt-24">
       {/* Hero */}
       <section className="relative py-16 bg-gradient-to-br from-emerald-900 via-emerald-800 to-green-900 overflow-hidden">
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'60\' height=\'60\' viewBox=\'0 0 60 60\'%3E%3Cpath d=\'M30 2L58 30L30 58L2 30Z\' fill=\'none\' stroke=\'white\' stroke-width=\'0.5\'/%3E%3C/svg%3E")' }} />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center">
+        <div className="relative z-10 max-w-8xl 2xl:max-w-9xl mx-auto px-4 sm:px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-sm text-white/80 text-sm mb-4">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              Tahun Ajaran 2026/2027
-            </span>
+            {pmb.badgeText && (
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-sm text-white/80 text-sm mb-4">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                {pmb.badgeText}
+              </span>
+            )}
             <h1 className="text-fluid-hero font-bold text-white mb-4">
-              PMB MTs Negeri 2 Kebumen
+              {pmb.title}
             </h1>
-            <p className="text-lg text-white/70 max-w-2xl mx-auto">
-              Pendaftaran Peserta Didik Baru. Daftarkan putra-putri Anda menjadi bagian dari keluarga besar MTsN 2 Kebumen.
+            <p className="text-lg text-white/85 max-w-2xl mx-auto">
+              {pmb.description}
             </p>
           </motion.div>
         </div>
@@ -46,13 +57,9 @@ export default function PMBPage() {
 
       {/* Info Cards */}
       <section className="py-16 bg-white dark:bg-dark-bg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="max-w-8xl 2xl:max-w-9xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { icon: 'calendar', label: 'Pendaftaran', value: '1-31 Agustus 2026' },
-              { icon: 'users', label: 'Kuota', value: '280 Siswa' },
-              { icon: 'graduation-cap', label: 'Biaya Pendaftaran', value: 'Gratis (Rp 0)' },
-            ].map((item, i) => (
+            {pmb.infoCards.map((item, i) => (
               <motion.div
                 key={item.label}
                 initial={{ opacity: 0, y: 20 }}
@@ -79,7 +86,7 @@ export default function PMBPage() {
             <p className="text-gray-500 dark:text-dark-text-muted mt-2">Ikuti langkah-langkah berikut untuk mendaftar</p>
           </ScrollReveal>
           <div className="space-y-6">
-            {pmbSteps.map((step, i) => (
+            {pmb.steps.map((step, i) => (
               <ScrollReveal key={step.number} delay={i * 0.1}>
                 <div className="flex items-start gap-4 bg-white dark:bg-dark-card rounded-xl p-5 border border-gray-100 dark:border-dark-border">
                   <div className="shrink-0 w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-bold">
@@ -96,14 +103,14 @@ export default function PMBPage() {
         </div>
       </section>
 
-      {/* Requirements */}
+      {/* Requirements & Contact */}
       <section className="py-16 bg-white dark:bg-dark-bg">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <ScrollReveal direction="left">
               <h2 className="text-fluid-h3 font-bold text-gray-900 dark:text-dark-text mb-6">Persyaratan Pendaftaran</h2>
               <ul className="space-y-3">
-                {requirements.map((req, i) => (
+                {pmb.requirements.map((req, i) => (
                   <li key={i} className="flex items-start gap-3">
                     <Icon name="check" size={18} className="text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
                     <span className="text-gray-600 dark:text-dark-text-muted">{req}</span>
@@ -113,36 +120,20 @@ export default function PMBPage() {
             </ScrollReveal>
             <ScrollReveal direction="right" delay={0.1}>
               <div className="bg-gradient-to-br from-emerald-600 to-emerald-900 rounded-2xl p-8 text-white">
-                <h3 className="font-display font-semibold text-xl mb-3">Hubungi Panitia PMB</h3>
-                <p className="text-emerald-100/80 text-sm mb-6">Jika ada pertanyaan seputar pendaftaran, silakan hubungi panitia PMB melalui kontak di bawah ini:</p>
+                <h3 className="font-display font-semibold text-xl mb-3">{pmb.contactTitle}</h3>
+                <p className="text-emerald-100/80 text-sm mb-6">{pmb.contactDescription}</p>
                 <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-                      <Icon name="phone" size={18} />
+                  {pmb.contacts.map((contact, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
+                        <Icon name={contact.icon} size={18} />
+                      </div>
+                      <div>
+                        <p className="text-xs text-emerald-200">{contact.label}</p>
+                        <p className="text-sm font-medium">{contact.value}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-xs text-emerald-200">Telepon</p>
-                      <p className="text-sm font-medium">(0287) 381234</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-                      <Icon name="mail" size={18} />
-                    </div>
-                    <div>
-                      <p className="text-xs text-emerald-200">Email</p>
-                      <p className="text-sm font-medium">pmb@mtsn2kebumen.sch.id</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-                      <Icon name="map-pin" size={18} />
-                    </div>
-                    <div>
-                      <p className="text-xs text-emerald-200">Alamat</p>
-                      <p className="text-sm font-medium">Kantor MTsN 2 Kebumen (Ruang Panitia PMB)</p>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
             </ScrollReveal>
@@ -158,7 +149,7 @@ export default function PMBPage() {
             <p className="text-gray-500 dark:text-dark-text-muted mb-8">Jangan lewatkan kesempatan menjadi bagian dari generasi unggul MTsN 2 Kebumen</p>
             <Button size="lg" magnetic className="shadow-xl">
               <Icon name="bookmark" size={20} />
-              Daftar Sekarang
+              {pmb.ctaText}
             </Button>
           </ScrollReveal>
         </div>

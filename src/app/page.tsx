@@ -1,28 +1,27 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import HeroSection from '@/components/home/HeroSection';
+import QuickInfoBar from '@/components/home/QuickInfoBar';
+import CarouselFasilitas from '@/components/home/CarouselFasilitas';
+import SambutanSection from '@/components/home/SambutanSection';
+import NilaiUnggulan from '@/components/home/NilaiUnggulan';
+import StatsSection from '@/components/home/StatsSection';
+import TimelineSejarah from '@/components/home/TimelineSejarah';
+import BeritaTerbaru from '@/components/home/BeritaTerbaru';
+import GaleriSection from '@/components/home/GaleriSection';
+import PetaLokasi from '@/components/home/PetaLokasi';
+import TestimoniSlider from '@/components/home/TestimoniSlider';
+import CTASection from '@/components/home/CTASection';
 
-const HeroSection = dynamic(() => import('@/components/home/HeroSection'), { loading: () => <div className="h-[90vh] min-h-[600px] bg-emerald-900 animate-pulse" /> });
-const PopupPengumuman = dynamic(() => import('@/components/home/PopupPengumuman'), { ssr: false });
-const WelcomePopup = dynamic(() => import('@/components/home/WelcomePopup'), { ssr: false });
-const QuickInfoBar = dynamic(() => import('@/components/home/QuickInfoBar'), { loading: () => <div className="h-16 bg-emerald-50 dark:bg-dark-card animate-pulse" /> });
-const CarouselFasilitas = dynamic(() => import('@/components/home/CarouselFasilitas'), { loading: () => <div className="h-[400px] bg-gray-100 dark:bg-dark-bg animate-pulse" /> });
-const SambutanSection = dynamic(() => import('@/components/home/SambutanSection'), { loading: () => <div className="h-[500px] bg-white dark:bg-dark-bg animate-pulse" /> });
-const NilaiUnggulan = dynamic(() => import('@/components/home/NilaiUnggulan'), { loading: () => <div className="h-[400px] bg-emerald-50/50 dark:bg-dark-bg animate-pulse" /> });
-const StatsSection = dynamic(() => import('@/components/home/StatsSection'), { loading: () => <div className="h-[300px] bg-emerald-900 animate-pulse" /> });
-const TimelineSejarah = dynamic(() => import('@/components/home/TimelineSejarah'), { loading: () => <div className="h-[500px] bg-white dark:bg-dark-bg animate-pulse" /> });
-const BeritaTerbaru = dynamic(() => import('@/components/home/BeritaTerbaru'), { loading: () => <div className="h-[600px] bg-white dark:bg-dark-bg animate-pulse" /> });
-const GaleriSection = dynamic(() => import('@/components/home/GaleriSection'), { loading: () => <div className="h-[400px] bg-emerald-50/50 dark:bg-dark-bg animate-pulse" /> });
-const PetaLokasi = dynamic(() => import('@/components/home/PetaLokasi'), { loading: () => <div className="h-[400px] bg-white dark:bg-dark-bg animate-pulse" /> });
-const TestimoniSlider = dynamic(() => import('@/components/home/TestimoniSlider'), { loading: () => <div className="h-[350px] bg-emerald-50/50 dark:bg-dark-bg animate-pulse" /> });
-const CTASection = dynamic(() => import('@/components/home/CTASection'), { loading: () => <div className="h-[300px] bg-emerald-900 animate-pulse" /> });
+// UnifiedPopup is intentionally client-only (ssr:false) to avoid popup flashing on load
+const UnifiedPopup = dynamic(() => import('@/components/home/UnifiedPopup'), { ssr: false });
 
 export default function HomePage() {
   return (
     <>
       <HeroSection />
-      <WelcomePopup />
-      <PopupPengumuman />
+      <UnifiedPopup />
       <QuickInfoBar />
       <CarouselFasilitas />
       <SambutanSection />

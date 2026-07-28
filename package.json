@@ -3,22 +3,29 @@
   "version": "3.0.0",
   "private": true,
   "scripts": {
+    "predev": "node -e \"const f=require('fs');const p='.next/cache/webpack';f.existsSync(p)&&f.rmSync(p,{recursive:true})\"",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@prisma/adapter-mariadb": "^7.9.0",
     "@prisma/client": "^7.9.0",
+    "bcryptjs": "^3.0.3",
     "framer-motion": "^11.2.0",
+    "jose": "^6.2.4",
     "lucide-react": "^0.400.0",
     "mariadb": "^3.5.3",
     "mysql2": "^3.23.1",
     "next": "^14.2.0",
     "prisma": "^7.9.0",
     "react": "^18.3.0",
-    "react-dom": "^18.3.0"
+    "react-dom": "^18.3.0",
+    "sharp": "^0.35.3"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
@@ -28,6 +35,7 @@
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.0",
     "postcss": "^8.4.0",
+    "puppeteer": "^25.4.0",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.4.0"
   }

@@ -19,10 +19,10 @@ export default function LayananPublikPage() {
     <main className="pt-24">
       <section className="relative py-16 bg-gradient-to-br from-emerald-900 via-emerald-800 to-green-900 overflow-hidden">
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'60\' height=\'60\' viewBox=\'0 0 60 60\'%3E%3Cpath d=\'M30 2L58 30L30 58L2 30Z\' fill=\'none\' stroke=\'white\' stroke-width=\'0.5\'/%3E%3C/svg%3E")' }} />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="relative z-10 max-w-8xl 2xl:max-w-9xl mx-auto px-4 sm:px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="text-fluid-hero font-bold text-white mb-3">Layanan Publik</h1>
-            <p className="text-lg text-white/70">Layanan pengaduan dan aspirasi masyarakat</p>
+            <p className="text-lg text-white/85">Layanan pengaduan dan aspirasi masyarakat</p>
           </motion.div>
         </div>
       </section>

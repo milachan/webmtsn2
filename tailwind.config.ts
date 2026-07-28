@@ -105,6 +105,21 @@ const config: Config = {
         "card": "0 4px 20px rgba(0, 0, 0, 0.08)",
         "card-hover": "0 20px 60px -15px rgba(0, 0, 0, 0.2)",
       },
+      maxWidth: {
+        '8xl': '90rem', /* 1440px */
+        '9xl': '110rem', /* 1760px — for ultrawide screens */
+      },
+      borderRadius: {
+        'xs': '0.375rem',     /* 6px - smallest */
+        'sm': '0.5rem',       /* 8px - badges, small elements */
+        'md': '0.75rem',      /* 12px - buttons, inputs (was rounded-xl) */
+        'lg': '1rem',         /* 16px - cards, modals (was rounded-2xl) */
+        'xl': '1.5rem',       /* 24px - hero sections, feature cards (was rounded-3xl) */
+        'button': '0.75rem',  /* semantic: button radius */
+        'card': '1rem',       /* semantic: card radius */
+        'modal': '1rem',      /* semantic: modal radius */
+        'section': '1.5rem',  /* semantic: section/hero radius */
+      },
       transitionTimingFunction: {
         "out-expo": "cubic-bezier(0.22, 1, 0.36, 1)",
         "out-soft": "cubic-bezier(0.16, 1, 0.3, 1)",

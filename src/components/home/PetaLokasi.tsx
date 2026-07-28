@@ -3,12 +3,13 @@
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import SectionTitle from '@/components/ui/SectionTitle';
 import Icon from '@/components/ui/Icon';
-import { schoolData } from '@/lib/data';
+import { useStoreData, getSchoolData } from '@/lib/adminStore';
 
 export default function PetaLokasi() {
+  const schoolData = useStoreData(getSchoolData);
   return (
     <section className="py-20 bg-white dark:bg-dark-bg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="max-w-8xl 2xl:max-w-9xl mx-auto px-4 sm:px-6">
         <SectionTitle
           title="Lokasi Madrasah"
           subtitle="Temukan Kami"
