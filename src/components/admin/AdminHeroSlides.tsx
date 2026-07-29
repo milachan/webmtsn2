@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Icon from '@/components/ui/Icon';
 import ImageUpload from '@/components/ui/ImageUpload';
+import { showToast } from '@/lib/toastStore';
 import {
   useStoreData, getHeroSlides, saveHeroSlides, generateId,
   HeroSlide,
@@ -16,8 +17,10 @@ export default function AdminHeroSlides() {
     setItems(storeItems);
   }, [storeItems]);
 
-  const handleSave = () => {
-    saveHeroSlides(items);
+  const handleSave = async () => {
+    const ok = await saveHeroSlides(items);
+    if (ok) showToast('Slide hero berhasil disimpan! ✅', 'success');
+    else showToast('Gagal menyimpan slide hero!', 'error');
   };
 
   const updateItem = (index: number, field: keyof HeroSlide, value: string | boolean) => {

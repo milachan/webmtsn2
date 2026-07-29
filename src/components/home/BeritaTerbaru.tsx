@@ -27,9 +27,18 @@ export default function BeritaTerbaru() {
                 <Card hover="lift" className="group h-full">
                   {/* Image */}
                   <div className={`relative h-48 overflow-hidden bg-gradient-to-br ${getGradientColor(berita.id)}`}>
-                    <div className="absolute inset-0 flex items-center justify-center opacity-30 group-hover:scale-110 transition-transform duration-500">
-                      <Icon name="image" size={48} className="text-white" />
-                    </div>
+                    {berita.image ? (
+                      <img
+                        src={berita.image}
+                        alt={berita.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center opacity-30 group-hover:scale-110 transition-transform duration-500">
+                        <Icon name="image" size={48} className="text-white" />
+                      </div>
+                    )}
                     {/* Category badge */}
                     <div className="absolute top-3 left-3 z-10">
                       <span className="px-3 py-1 rounded-full text-xs font-medium bg-white/90 dark:bg-dark-card/90 text-emerald-700 dark:text-emerald-300 backdrop-blur-sm">

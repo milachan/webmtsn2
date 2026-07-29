@@ -26,15 +26,27 @@ export default function SambutanPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
             <ScrollReveal direction="left" className="lg:col-span-1">
               <div className="lg:sticky lg:top-24">
-                <div className="aspect-[3/4] rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-900 flex items-center justify-center shadow-xl">
-                  <div className="text-center text-white p-6">
-                    <div className="w-24 h-24 rounded-full bg-white/20 mx-auto mb-4 flex items-center justify-center">
-                      <Icon name="graduation-cap" size={40} className="text-white" />
+                <div className="relative aspect-[3/4] rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-900 overflow-hidden shadow-xl">
+                  {/* Gradient fallback layer */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center text-white p-6">
+                      <div className="w-24 h-24 rounded-full bg-white/20 mx-auto mb-4 flex items-center justify-center">
+                        <Icon name="graduation-cap" size={40} className="text-white" />
+                      </div>
+                      <p className="font-display font-semibold">{kepalaMadrasah.name}</p>
+                      <p className="text-emerald-200 text-sm mt-1">Kepala MTs Negeri 2 Kebumen</p>
+                      <p className="text-emerald-300/60 text-xs mt-3">NIP. {kepalaMadrasah.nip}</p>
                     </div>
-                    <p className="font-display font-semibold">{kepalaMadrasah.name}</p>
-                    <p className="text-emerald-200 text-sm mt-1">Kepala MTs Negeri 2 Kebumen</p>
-                    <p className="text-emerald-300/60 text-xs mt-3">NIP. {kepalaMadrasah.nip}</p>
                   </div>
+                  {/* Foto — overlay di atas gradient */}
+                  {kepalaMadrasah.image && (
+                    <img
+                      src={kepalaMadrasah.image}
+                      alt={kepalaMadrasah.name}
+                      className="absolute inset-0 w-full h-full object-cover"
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                    />
+                  )}
                 </div>
               </div>
             </ScrollReveal>

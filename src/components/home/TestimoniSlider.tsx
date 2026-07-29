@@ -88,8 +88,17 @@ export default function TestimoniSlider() {
 
                   <div className="mt-6 pt-4 border-t border-gray-100 dark:border-dark-border">
                     <div className="flex items-center justify-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white font-bold text-sm">
-                        {testimoni[current].name.charAt(0)}
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white font-bold text-sm overflow-hidden">
+                        {testimoni[current].avatar ? (
+                          <img
+                            src={testimoni[current].avatar}
+                            alt={testimoni[current].name}
+                            className="w-full h-full object-cover"
+                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                          />
+                        ) : (
+                          testimoni[current].name.charAt(0)
+                        )}
                       </div>
                       <div className="text-left">
                         <p className="font-semibold text-gray-900 dark:text-dark-text text-sm">

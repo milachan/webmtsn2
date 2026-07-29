@@ -62,6 +62,7 @@ export interface Ekstrakurikuler {
   description: string;
   icon: string;
   category: string;
+  image: string;
 }
 
 export interface Guru {
@@ -104,6 +105,7 @@ export interface StrukturPosisi {
   icon: string;
   color: string;
   type: 'kepala' | 'waka' | 'guru';
+  image: string;
 }
 
 export interface StrukturGuruBidang {
@@ -146,11 +148,11 @@ export interface SocialLink {
 
 export const defaultStrukturOrganisasi = {
   positions: [
-    { id: 1, level: 'Kepala Madrasah', name: 'Dr. H. Ahmad Fauzi, S.Ag., M.Pd.', icon: 'graduation-cap', color: 'from-emerald-600 to-emerald-900', type: 'kepala' },
-    { id: 2, level: 'Waka Kurikulum', name: 'Drs. H. Slamet Riyadi', icon: 'book-open', color: 'from-emerald-500 to-emerald-700', type: 'waka' },
-    { id: 3, level: 'Waka Kesiswaan', name: 'Hj. Siti Nurjanah, S.Pd., M.Pd.', icon: 'users', color: 'from-emerald-500 to-emerald-700', type: 'waka' },
-    { id: 4, level: 'Waka Sarpras', name: 'H. Ali Maksum, S.Pd.I., M.S.I.', icon: 'building-2', color: 'from-emerald-500 to-emerald-700', type: 'waka' },
-    { id: 5, level: 'Waka Humas', name: 'Dra. Hj. Masruroh', icon: 'message-square', color: 'from-emerald-500 to-emerald-700', type: 'waka' },
+    { id: 1, level: 'Kepala Madrasah', name: 'Dr. H. Ahmad Fauzi, S.Ag., M.Pd.', icon: 'graduation-cap', color: 'from-emerald-600 to-emerald-900', type: 'kepala', image: '' },
+    { id: 2, level: 'Waka Kurikulum', name: 'Drs. H. Slamet Riyadi', icon: 'book-open', color: 'from-emerald-500 to-emerald-700', type: 'waka', image: '' },
+    { id: 3, level: 'Waka Kesiswaan', name: 'Hj. Siti Nurjanah, S.Pd., M.Pd.', icon: 'users', color: 'from-emerald-500 to-emerald-700', type: 'waka', image: '' },
+    { id: 4, level: 'Waka Sarpras', name: 'H. Ali Maksum, S.Pd.I., M.S.I.', icon: 'building-2', color: 'from-emerald-500 to-emerald-700', type: 'waka', image: '' },
+    { id: 5, level: 'Waka Humas', name: 'Dra. Hj. Masruroh', icon: 'message-square', color: 'from-emerald-500 to-emerald-700', type: 'waka', image: '' },
   ],
   guruList: [
     { id: 1, bidang: 'Guru Mata Pelajaran', count: '35 Guru' },
@@ -222,6 +224,7 @@ export const schoolData = {
 };
 
 export const kepalaMadrasah = {
+  image: '',
   name: 'Dr. H. Ahmad Fauzi, S.Ag., M.Pd.',
   nip: '197008152005011002',
   sambutan: `Assalamu'alaikum Warahmatullahi Wabarakatuh,
@@ -397,18 +400,18 @@ export const testimoni: Testimoni[] = [
 ];
 
 export const ekstrakurikuler: Ekstrakurikuler[] = [
-  { id: 1, name: 'Pramuka', description: 'Gerakan Pramuka MTsN 2 Kebumen aktif dengan berbagai kegiatan kepramukaan', icon: 'compass', category: 'Wajib' },
-  { id: 2, name: 'Tahfidz Qur\'an', description: 'Program intensif hafalan Al-Qur\'an dengan target 3 juz dalam 3 tahun', icon: 'book-open', category: 'Keagamaan' },
-  { id: 3, name: 'Paskibra', description: 'Pasukan pengibar bendera yang berlatih kedisiplinan dan baris-berbaris', icon: 'flag', category: 'Kedisiplinan' },
-  { id: 4, name: 'Futsal', description: 'Tim futsal madrasah yang berprestasi di tingkat kabupaten dan provinsi', icon: 'football', category: 'Olahraga' },
-  { id: 5, name: 'Robotik', description: 'Ekstrakurikuler robotik dan coding untuk mengembangkan keterampilan teknologi', icon: 'bot', category: 'Sains' },
-  { id: 6, name: 'Seni Baca Al-Qur\'an', description: 'Pembelajaran seni baca Al-Qur\'an dengan tartil dan berbagai maqamat', icon: 'music', category: 'Keagamaan' },
-  { id: 7, name: 'Basket', description: 'Tim basket putra dan putri dengan pelatih profesional', icon: 'target', category: 'Olahraga' },
-  { id: 8, name: 'Jurnalistik', description: 'Melatih siswa menulis berita, artikel, dan mengelola majalah dinding madrasah', icon: 'pen-tool', category: 'Seni' },
-  { id: 9, name: 'PMR', description: 'Palang Merah Remaja dengan pelatihan pertolongan pertama dan kesehatan', icon: 'heart', category: 'Kesehatan' },
-  { id: 10, name: 'Hadroh', description: 'Seni musik Islami hadroh dan marawis', icon: 'music-2', category: 'Keagamaan' },
-  { id: 11, name: 'English Club', description: 'Club bahasa Inggris untuk meningkatkan kemampuan komunikasi internasional', icon: 'message-square', category: 'Akademik' },
-  { id: 12, name: 'Panahan', description: 'Olahraga panahan yang melatih fokus, konsentrasi, dan kesabaran', icon: 'crosshair', category: 'Olahraga' },
+  { id: 1, name: 'Pramuka', description: 'Gerakan Pramuka MTsN 2 Kebumen aktif dengan berbagai kegiatan kepramukaan', icon: 'compass', category: 'Wajib', image: '' },
+  { id: 2, name: 'Tahfidz Qur\'an', description: 'Program intensif hafalan Al-Qur\'an dengan target 3 juz dalam 3 tahun', icon: 'book-open', category: 'Keagamaan', image: '' },
+  { id: 3, name: 'Paskibra', description: 'Pasukan pengibar bendera yang berlatih kedisiplinan dan baris-berbaris', icon: 'flag', category: 'Kedisiplinan', image: '' },
+  { id: 4, name: 'Futsal', description: 'Tim futsal madrasah yang berprestasi di tingkat kabupaten dan provinsi', icon: 'football', category: 'Olahraga', image: '' },
+  { id: 5, name: 'Robotik', description: 'Ekstrakurikuler robotik dan coding untuk mengembangkan keterampilan teknologi', icon: 'bot', category: 'Sains', image: '' },
+  { id: 6, name: 'Seni Baca Al-Qur\'an', description: 'Pembelajaran seni baca Al-Qur\'an dengan tartil dan berbagai maqamat', icon: 'music', category: 'Keagamaan', image: '' },
+  { id: 7, name: 'Basket', description: 'Tim basket putra dan putri dengan pelatih profesional', icon: 'target', category: 'Olahraga', image: '' },
+  { id: 8, name: 'Jurnalistik', description: 'Melatih siswa menulis berita, artikel, dan mengelola majalah dinding madrasah', icon: 'pen-tool', category: 'Seni', image: '' },
+  { id: 9, name: 'PMR', description: 'Palang Merah Remaja dengan pelatihan pertolongan pertama dan kesehatan', icon: 'heart', category: 'Kesehatan', image: '' },
+  { id: 10, name: 'Hadroh', description: 'Seni musik Islami hadroh dan marawis', icon: 'music-2', category: 'Keagamaan', image: '' },
+  { id: 11, name: 'English Club', description: 'Club bahasa Inggris untuk meningkatkan kemampuan komunikasi internasional', icon: 'message-square', category: 'Akademik', image: '' },
+  { id: 12, name: 'Panahan', description: 'Olahraga panahan yang melatih fokus, konsentrasi, dan kesabaran', icon: 'crosshair', category: 'Olahraga', image: '' },
 ];
 
 export const guruTendik: Guru[] = [

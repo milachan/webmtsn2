@@ -67,8 +67,18 @@ export default function BeritaDetailPage() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
             {/* Featured image */}
-            <div className={`aspect-video rounded-2xl bg-gradient-to-br ${getGradientColor(berita.id)} flex items-center justify-center mb-10 shadow-xl shadow-gray-200/50 dark:shadow-black/20`}>
-              <Icon name="image" size={64} className="text-white/30" />
+            <div className="aspect-video rounded-2xl overflow-hidden relative mb-10 shadow-xl shadow-gray-200/50 dark:shadow-black/20">
+              <div className={`absolute inset-0 bg-gradient-to-br ${getGradientColor(berita.id)} flex items-center justify-center`}>
+                <Icon name="image" size={64} className="text-white/30" />
+              </div>
+              {berita.image && (
+                <img
+                  src={berita.image}
+                  alt={berita.title}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                />
+              )}
             </div>
 
             {/* Article content */}

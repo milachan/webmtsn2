@@ -88,9 +88,9 @@ export default function UnifiedPopup() {
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             className="fixed inset-0 z-[81] flex items-center justify-center p-4"
           >
-            <div className="bg-white dark:bg-dark-card rounded-3xl shadow-2xl shadow-black/30 dark:shadow-black/50 overflow-y-auto w-full max-w-xl max-h-[85vh]">
+            <div className="bg-white dark:bg-dark-card rounded-2xl sm:rounded-3xl shadow-2xl shadow-black/30 dark:shadow-black/50 overflow-y-auto w-full max-w-xl max-h-[90vh] mx-2 sm:mx-0">
               {/* ===== Header ===== */}
-              <div className="relative bg-gradient-to-br from-emerald-900 via-emerald-800 to-green-900 p-6 sm:p-8 text-center overflow-hidden">
+              <div className="relative bg-gradient-to-br from-emerald-900 via-emerald-800 to-green-900 p-5 sm:p-8 text-center overflow-hidden">
                 {/* Ornament pattern */}
                 <div
                   className="absolute inset-0 opacity-[0.04]"
@@ -105,8 +105,8 @@ export default function UnifiedPopup() {
 
                 <div className="relative z-10">
                   {/* Logo icon */}
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/15 backdrop-blur-sm flex items-center justify-center ring-2 ring-white/20 shadow-lg">
-                    <span className="text-2xl font-bold text-white font-display">M</span>
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-2 sm:mb-4 rounded-xl sm:rounded-2xl bg-white/15 backdrop-blur-sm flex items-center justify-center ring-2 ring-white/20 shadow-lg">
+                    <span className="text-lg sm:text-2xl font-bold text-white font-display">M</span>
                   </div>
 
                   <motion.div
@@ -114,22 +114,22 @@ export default function UnifiedPopup() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2, duration: 0.5 }}
                   >
-                    <h2 className="text-2xl font-bold text-white font-display mb-1">
+                    <h2 className="text-xl sm:text-2xl font-bold text-white font-display mb-0.5 sm:mb-1">
                       Selamat Datang
                     </h2>
-                    <p className="text-emerald-200/80 text-sm font-medium">
+                    <p className="text-emerald-200/80 text-xs sm:text-sm font-medium">
                       MTs Negeri 2 Kebumen
                     </p>
                   </motion.div>
 
                   {/* Islamic divider */}
-                  <div className="flex items-center gap-3 mt-4 mb-2">
+                  <div className="flex items-center gap-2 sm:gap-3 mt-2 sm:mt-4 mb-1 sm:mb-2">
                     <div className="h-px flex-1 bg-gradient-to-r from-transparent via-emerald-400/30 to-transparent" />
-                    <Icon name="star" size={14} className="text-emerald-400/50" />
+                    <Icon name="star" size={10} className="text-emerald-400/50 sm:w-[14px] sm:h-[14px]" />
                     <div className="h-px flex-1 bg-gradient-to-r from-transparent via-emerald-400/30 to-transparent" />
                   </div>
 
-                  <p className="text-white/60 text-xs">
+                  <p className="text-white/60 text-[10px] sm:text-xs">
                     Informasi & Kegiatan Terbaru
                   </p>
                 </div>
@@ -137,10 +137,10 @@ export default function UnifiedPopup() {
                 {/* Close button */}
                 <button
                   onClick={handleClose}
-                  className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center text-white/70 hover:text-white transition-all z-20 group"
+                  className="absolute top-2 right-2 sm:top-4 sm:right-4 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center text-white/70 hover:text-white transition-all z-20 group"
                   aria-label="Tutup"
                 >
-                  <Icon name="x" size={16} className="group-hover:rotate-90 transition-transform duration-300" />
+                  <Icon name="x" size={14} className="group-hover:rotate-90 transition-transform duration-300 sm:w-4 sm:h-4" />
                 </button>
               </div>
 
@@ -153,14 +153,14 @@ export default function UnifiedPopup() {
                       setActiveTab(tab.id);
                       setCurrentSlide(0);
                     }}
-                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-medium transition-all duration-300 relative ${
+                    className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2.5 sm:py-3.5 text-xs sm:text-sm font-medium transition-all duration-300 relative ${
                       activeTab === tab.id
                         ? 'text-emerald-600 dark:text-emerald-400'
                         : 'text-gray-400 dark:text-dark-text-muted hover:text-gray-600 dark:hover:text-dark-text'
                     }`}
                   >
-                    <Icon name={tab.icon} size={15} />
-                    {tab.label}
+                    <Icon name={tab.icon} size={14} className="sm:w-[15px] sm:h-[15px]" />
+                    <span className="truncate">{tab.label}</span>
                     {tab.count > 0 && tab.id === 'pengumuman' && (
                       <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1.5 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none">
                         {tab.count}
@@ -179,7 +179,7 @@ export default function UnifiedPopup() {
               </div>
 
               {/* ===== Tab Content ===== */}
-              <div className="p-4 sm:p-6">
+              <div className="p-3 sm:p-6">
                 <AnimatePresence mode="wait">
                   {/* ── Tab: Berita Terbaru ── */}
                   {activeTab === 'berita' && (
@@ -371,7 +371,7 @@ export default function UnifiedPopup() {
               </div>
 
               {/* ===== Footer ===== */}
-              <div className="px-4 sm:px-6 pb-4 sm:pb-6">
+              <div className="px-3 sm:px-6 pb-3 sm:pb-6">
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                   {activeTab === 'berita' ? (
                     <Link

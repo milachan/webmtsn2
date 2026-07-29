@@ -49,17 +49,35 @@ export default function EkstrakurikulerPage() {
           <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map((ekskul) => (
               <StaggerItem key={ekskul.id}>
-                <Card hover="lift" className="p-5 h-full">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shrink-0">
-                      <Icon name={ekskul.icon} size={22} className="text-white" />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-display font-semibold text-gray-900 dark:text-dark-text">{ekskul.name}</h3>
-                        <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">{ekskul.category}</span>
+                <Card hover="lift" className="h-full overflow-hidden">
+                  {/* Image */}
+                  <div className="h-40 overflow-hidden bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center relative">
+                    {ekskul.image ? (
+                      <img
+                        src={ekskul.image}
+                        alt={ekskul.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                      />
+                    ) : (
+                      <Icon name={ekskul.icon} size={32} className="text-white/60" />
+                    )}
+                  </div>
+                  {/* Content */}
+                  <div className="p-5">
+                    <div className="flex items-start gap-4">
+                      {ekskul.image ? null : (
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shrink-0">
+                          <Icon name={ekskul.icon} size={18} className="text-white" />
+                        </div>
+                      )}
+                      <div className={ekskul.image ? '' : 'flex-1'}>
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="font-display font-semibold text-gray-900 dark:text-dark-text">{ekskul.name}</h3>
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">{ekskul.category}</span>
+                        </div>
+                        <p className="text-sm text-gray-500 dark:text-dark-text-muted">{ekskul.description}</p>
                       </div>
-                      <p className="text-sm text-gray-500 dark:text-dark-text-muted">{ekskul.description}</p>
                     </div>
                   </div>
                 </Card>

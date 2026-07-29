@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Icon from '@/components/ui/Icon';
+import ImageUpload from '@/components/ui/ImageUpload';
 import {
   useStoreData, getStrukturOrganisasi, saveStrukturOrganisasi, generateId,
   StrukturPosisi, StrukturGuruBidang,
@@ -35,7 +36,7 @@ export default function AdminStrukturOrganisasi() {
   };
 
   const addPosition = () => {
-    const newPos: StrukturPosisi = { id: generateId(), level: '', name: '', icon: 'users', color: 'from-emerald-500 to-emerald-700', type: 'waka' };
+    const newPos: StrukturPosisi = { id: generateId(), level: '', name: '', icon: 'users', color: 'from-emerald-500 to-emerald-700', type: 'waka', image: '' };
     setData({ ...data, positions: [...data.positions, newPos] });
   };
 
@@ -96,6 +97,16 @@ export default function AdminStrukturOrganisasi() {
         <div className="space-y-3">
           {data.positions.map((pos) => (
             <div key={pos.id} className="p-4 rounded-xl bg-gray-50 dark:bg-dark-bg border border-gray-100 dark:border-dark-border">
+              {/* Photo upload */}
+              <div className="mb-3">
+                <ImageUpload
+                  value={pos.image}
+                  onChange={(url) => updatePosition(pos.id, 'image', url)}
+                  width={200}
+                  height={200}
+                  placeholder="Upload foto (200x200 px)"
+                />
+              </div>
               <div className="flex items-start gap-3">
                 <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>

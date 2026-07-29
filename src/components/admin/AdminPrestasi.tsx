@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Icon from '@/components/ui/Icon';
 import AdminFormModal from './AdminFormModal';
+import { showToast } from '@/lib/toastStore';
 import {
   useStoreData, getPrestasi, addPrestasi, updatePrestasi, deletePrestasi, generateId,
   Prestasi,
@@ -56,9 +57,11 @@ export default function AdminPrestasi() {
     setModalOpen(true);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     if (confirm('Yakin ingin menghapus prestasi ini?')) {
-      deletePrestasi(id);
+      const ok = await deletePrestasi(id);
+      if (ok) showToast('Prestasi berhasil dihapus! ✅', 'success');
+      else showToast('Gagal menghapus prestasi!', 'error');
     }
   };
 

@@ -43,8 +43,8 @@ async function main() {
 
   // Ekstrakurikuler
   await prisma.ekstrakurikuler.createMany({ data: [
-    { id: 1, name: 'Pramuka', description: 'Gerakan Pramuka MTsN 2 Kebumen aktif dengan berbagai kegiatan kepramukaan', icon: 'compass', category: 'Wajib' },
-    { id: 2, name: 'Tahfidz Qur\'an', description: 'Program intensif hafalan Al-Qur\'an dengan target 3 juz dalam 3 tahun', icon: 'book-open', category: 'Keagamaan' },
+    { id: 1, name: 'Pramuka', description: 'Gerakan Pramuka MTsN 2 Kebumen aktif dengan berbagai kegiatan kepramukaan', icon: 'compass', category: 'Wajib', image: '' },
+    { id: 2, name: 'Tahfidz Qur\'an', description: 'Program intensif hafalan Al-Qur\'an dengan target 3 juz dalam 3 tahun', icon: 'book-open', category: 'Keagamaan', image: '' },
   ], skipDuplicates: true });
 
   // Galeri

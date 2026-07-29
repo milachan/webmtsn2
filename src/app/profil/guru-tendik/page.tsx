@@ -30,8 +30,17 @@ export default function GuruTendikPage() {
               <StaggerItem key={guru.id}>
                 <Card hover="lift" className="p-5">
                   <div className="flex items-start gap-4">
-                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white font-bold text-xl shrink-0">
-                      {guru.name.split(' ').map(w => w[0]).slice(0, 2).join('')}
+                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white font-bold text-xl shrink-0 overflow-hidden">
+                      {guru.image ? (
+                        <img
+                          src={guru.image}
+                          alt={guru.name}
+                          className="w-full h-full object-cover"
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                        />
+                      ) : (
+                        guru.name.split(' ').map(w => w[0]).slice(0, 2).join('')
+                      )}
                     </div>
                     <div className="min-w-0">
                       <h3 className="font-display font-semibold text-gray-900 dark:text-dark-text text-sm leading-tight">

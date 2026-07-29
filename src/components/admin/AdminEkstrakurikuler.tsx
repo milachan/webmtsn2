@@ -22,6 +22,7 @@ const formFields = [
     { label: 'Kesehatan', value: 'Kesehatan' },
     { label: 'Akademik', value: 'Akademik' },
   ]},
+  { name: 'image', label: 'Foto Kegiatan', type: 'image' as const, placeholder: 'Upload foto kegiatan ekskul', imageWidth: 800, imageHeight: 600 },
 ];
 
 export default function AdminEkstrakurikuler() {
@@ -40,6 +41,7 @@ export default function AdminEkstrakurikuler() {
         description: data.description,
         icon: data.icon,
         category: data.category,
+        image: data.image || '',
       });
       if (!ok) return false;
     }
@@ -74,24 +76,34 @@ export default function AdminEkstrakurikuler() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {items.map((item) => (
-          <div key={item.id} className="bg-white dark:bg-dark-card rounded-xl border border-gray-100 dark:border-dark-border p-4 hover:border-emerald-200 dark:hover:border-emerald-800 transition-all group">
-            <div className="flex items-start justify-between">
-              <div className="flex items-center gap-3 min-w-0 flex-1">
-                <div className="w-9 h-9 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
-                  <Icon name={item.icon} size={18} />
-                </div>
-                <div className="min-w-0">
+          <div key={item.id} className="bg-white dark:bg-dark-card rounded-xl border border-gray-100 dark:border-dark-border overflow-hidden hover:border-emerald-200 dark:hover:border-emerald-800 transition-all group">
+            {/* Image preview */}
+            <div className="h-28 overflow-hidden bg-gradient-to-br from-indigo-100 to-indigo-200 dark:from-indigo-900/30 dark:to-indigo-800/30 flex items-center justify-center">
+              {item.image ? (
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                />
+              ) : (
+                <Icon name={item.icon} size={24} className="text-indigo-400 dark:text-indigo-500" />
+              )}
+            </div>
+            <div className="p-4">
+              <div className="flex items-start justify-between">
+                <div className="min-w-0 flex-1">
                   <h4 className="font-medium text-sm text-gray-900 dark:text-dark-text line-clamp-1">{item.name}</h4>
                   <span className="inline-flex mt-1 px-2 py-0.5 rounded-md text-[10px] font-medium bg-gray-100 dark:bg-dark-border text-gray-600 dark:text-dark-text-muted">
                     {item.category}
                   </span>
                 </div>
-              </div>
-              <div className="flex items-center gap-1 ml-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"><button onClick={() => handleEdit(item)} className="p-1.5 rounded-lg text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors" aria-label="Edit ekstrakurikuler">
-                    <Icon name="pen-tool" size={14} />
-                </button><button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors" aria-label="Hapus ekstrakurikuler">
-                    <Icon name="trash-2" size={14} />
-                </button>
+                <div className="flex items-center gap-1 ml-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"><button onClick={() => handleEdit(item)} className="p-1.5 rounded-lg text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors" aria-label="Edit ekstrakurikuler">
+                      <Icon name="pen-tool" size={14} />
+                  </button><button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors" aria-label="Hapus ekstrakurikuler">
+                      <Icon name="trash-2" size={14} />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -114,6 +126,7 @@ export default function AdminEkstrakurikuler() {
           description: editingItem.description,
           icon: editingItem.icon,
           category: editingItem.category,
+          image: editingItem.image,
         } : {}}
         isEditing={!!editingItem}
       />

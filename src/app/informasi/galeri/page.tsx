@@ -24,8 +24,20 @@ function Lightbox({ item, onClose, onPrev, onNext }: { item: GaleriItem; onClose
         className="relative max-w-4xl w-full mx-4"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className={`aspect-video rounded-2xl bg-gradient-to-br ${getGradientColor(item.id)} flex items-center justify-center`}>
-          <Icon name="image" size={64} className="text-white/30" />
+        <div className="aspect-video rounded-2xl overflow-hidden relative">
+          {/* Always-visible fallback at bottom layer */}
+          <div className={`absolute inset-0 bg-gradient-to-br ${getGradientColor(item.id)} flex items-center justify-center`}>
+            <Icon name="image" size={64} className="text-white/30" />
+          </div>
+          {/* Image on top layer — hides fallback when it loads */}
+          {item.image && (
+            <img
+              src={item.image}
+              alt={item.title}
+              className="absolute inset-0 w-full h-full object-cover"
+              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+            />
+          )}
         </div>
         <div className="mt-4 text-center">
           <h3 className="text-white font-display font-semibold text-lg">{item.title}</h3>
@@ -99,9 +111,18 @@ export default function GaleriPage() {
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setLightboxIndex(index); } }}
                     style={{ aspectRatio: index % 7 === 0 ? '16/9' : '4/3' }}
                   >
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Icon name="image" size={index % 7 === 0 ? 48 : 32} className="text-white/20" />
-                    </div>
+                    {item.image ? (
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <Icon name="image" size={index % 7 === 0 ? 48 : 32} className="text-white/20" />
+                      </div>
+                    )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="absolute bottom-0 left-0 right-0 p-4">
                         <p className="text-white font-semibold text-sm truncate">{item.title}</p>

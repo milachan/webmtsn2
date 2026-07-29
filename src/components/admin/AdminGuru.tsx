@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Icon from '@/components/ui/Icon';
 import AdminFormModal from './AdminFormModal';
+import { showToast } from '@/lib/toastStore';
 import {
   useStoreData, getGuru, addGuru, updateGuru, deleteGuru, generateId,
   Guru,
@@ -44,9 +45,11 @@ export default function AdminGuru() {
     setModalOpen(true);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     if (confirm('Yakin ingin menghapus data guru ini?')) {
-      deleteGuru(id);
+      const ok = await deleteGuru(id);
+      if (ok) showToast('Data guru berhasil dihapus! ✅', 'success');
+      else showToast('Gagal menghapus data guru!', 'error');
     }
   };
 
@@ -68,6 +71,7 @@ export default function AdminGuru() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100 dark:border-dark-border bg-gray-50 dark:bg-dark-bg/50">
+                <th className="text-left px-4 py-3 font-medium text-gray-500 dark:text-dark-text-muted text-xs uppercase tracking-wider">Foto</th>
                 <th className="text-left px-4 py-3 font-medium text-gray-500 dark:text-dark-text-muted text-xs uppercase tracking-wider">Nama</th>
                 <th className="text-left px-4 py-3 font-medium text-gray-500 dark:text-dark-text-muted text-xs uppercase tracking-wider hidden md:table-cell">Jabatan</th>
                 <th className="text-left px-4 py-3 font-medium text-gray-500 dark:text-dark-text-muted text-xs uppercase tracking-wider hidden sm:table-cell">Bidang Studi</th>
@@ -77,6 +81,24 @@ export default function AdminGuru() {
             <tbody className="divide-y divide-gray-50 dark:divide-dark-border">
               {items.map((item) => (
                 <tr key={item.id} className="hover:bg-gray-50/50 dark:hover:bg-dark-bg/30 transition-colors">
+                  <td className="px-4 py-3.5 w-14">
+                    <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-emerald-100 to-emerald-200 dark:from-emerald-900/30 dark:to-emerald-800/30 flex items-center justify-center">
+                      {item.image ? (
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = 'none';
+                          }}
+                        />
+                      ) : (
+                        <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                          {item.name.charAt(0)}
+                        </span>
+                      )}
+                    </div>
+                  </td>
                   <td className="px-4 py-3.5">
                     <p className="font-medium text-gray-900 dark:text-dark-text">{item.name}</p>
                   </td>
@@ -96,7 +118,7 @@ export default function AdminGuru() {
               ))}
               {items.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="text-center py-10 text-gray-400 dark:text-dark-text-muted text-sm">
+                  <td colSpan={5} className="text-center py-10 text-gray-400 dark:text-dark-text-muted text-sm">
                     Belum ada data guru.
                   </td>
                 </tr>

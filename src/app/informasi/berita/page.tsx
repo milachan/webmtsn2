@@ -48,7 +48,16 @@ export default function BeritaPage() {
                   <Card hover="lift" className="h-full group">
                     {/* Card image */}
                     <div className={`h-52 bg-gradient-to-br ${getGradientColor(berita.id)} flex items-center justify-center relative overflow-hidden`}>
-                      <Icon name="image" size={48} className="text-white/30 group-hover:scale-110 transition-transform duration-500" />
+                      {berita.image ? (
+                        <img
+                          src={berita.image}
+                          alt={berita.title}
+                          className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                        />
+                      ) : (
+                        <Icon name="image" size={48} className="text-white/30 group-hover:scale-110 transition-transform duration-500" />
+                      )}
                       <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium bg-white/90 dark:bg-dark-card/90 text-emerald-700 dark:text-emerald-300 shadow-sm">
                         {berita.category}
                       </span>

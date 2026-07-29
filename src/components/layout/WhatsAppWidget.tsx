@@ -63,7 +63,7 @@ export default function WhatsAppWidget() {
 
   // ─── Render ─────────────────────────────────────────────────────
   return (
-    <div className="fixed bottom-6 right-4 sm:right-6 z-50 flex flex-col items-end">
+    <div className="fixed bottom-[max(1.5rem,env(safe-area-inset-bottom))] right-[max(1rem,env(safe-area-inset-right))] sm:right-[max(1.5rem,env(safe-area-inset-right))] z-50 flex flex-col items-end">
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -77,10 +77,9 @@ export default function WhatsAppWidget() {
             aria-hidden="true"
           />
         )}
-        {isOpen && (
-          <motion.div
+        {isOpen && (            <motion.div
             key="fab-items"
-            className="relative z-50 flex flex-col items-end gap-3 mb-4"
+            className="relative z-50 flex flex-col items-end gap-3 mb-4 max-h-[70vh] overflow-y-auto overscroll-contain"
             initial="hidden"
             animate="visible"
             exit="exit"

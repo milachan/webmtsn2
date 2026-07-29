@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import Icon from '@/components/ui/Icon';
 import ImageUpload from '@/components/ui/ImageUpload';
+import { showToast } from '@/lib/toastStore';
 
 interface FieldConfig {
   name: string;
@@ -106,6 +107,8 @@ export default function AdminFormModal({
       if (!success) {
         setErrorMessage('Gagal menyimpan data. Silakan coba lagi.');
         setIsSubmitting(false);
+      } else {
+        showToast(isEditing ? 'Data berhasil diperbarui! ✅' : 'Data berhasil ditambahkan! ✅', 'success');
       }
       // If success, parent handleSave will call onClose
     } catch (err) {

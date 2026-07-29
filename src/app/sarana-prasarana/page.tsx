@@ -24,12 +24,32 @@ export default function SaranaPrasaranaPage() {
           <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {fasilitas.map((item) => (
               <StaggerItem key={item.id}>
-                <Card hover="lift" className="h-full p-6">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center mb-5">
-                    <Icon name={item.icon} size={26} className="text-white" />
+                <Card hover="lift" className="group h-full overflow-hidden">
+                  {/* Image section */}
+                  <div className="h-44 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 dark:from-dark-bg dark:to-dark-border relative flex items-center justify-center">
+                    {item.image ? (
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                      />
+                    ) : (
+                      <div className="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+                        <Icon name={item.icon} size={26} className="text-emerald-600 dark:text-emerald-400" />
+                      </div>
+                    )}
                   </div>
-                  <h3 className="font-display font-semibold text-gray-900 dark:text-dark-text mb-2">{item.name}</h3>
-                  <p className="text-sm text-gray-500 dark:text-dark-text-muted leading-relaxed">{item.description}</p>
+                  {/* Content section */}
+                  <div className="p-6">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shrink-0">
+                        <Icon name={item.icon} size={18} className="text-white" />
+                      </div>
+                      <h3 className="font-display font-semibold text-gray-900 dark:text-dark-text">{item.name}</h3>
+                    </div>
+                    <p className="text-sm text-gray-500 dark:text-dark-text-muted leading-relaxed">{item.description}</p>
+                  </div>
                 </Card>
               </StaggerItem>
             ))}

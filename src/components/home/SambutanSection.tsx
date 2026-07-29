@@ -18,6 +18,7 @@ export default function SambutanSection() {
               <div className="relative">
                 {/* Photo Frame */}
                 <div className="relative overflow-hidden rounded-3xl aspect-[4/5] bg-gradient-to-br from-emerald-600 to-emerald-900 shadow-2xl shadow-emerald-900/20">
+                  {/* Gradient fallback layer — always visible */}
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-center text-white">
                       <div className="w-24 h-24 rounded-full bg-white/20 mx-auto mb-4 flex items-center justify-center">
@@ -33,6 +34,15 @@ export default function SambutanSection() {
                       backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath d='M20 2L38 20L20 38L2 20Z' fill='none' stroke='white' stroke-width='0.5'/%3E%3C/svg%3E")`,
                     }}
                   />
+                  {/* Foto kepala — overlay di atas gradient */}
+                  {kepalaMadrasah.image && (
+                    <img
+                      src={kepalaMadrasah.image}
+                      alt={kepalaMadrasah.name}
+                      className="absolute inset-0 w-full h-full object-cover"
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                    />
+                  )}
                 </div>
 
                 {/* Decorative elements */}

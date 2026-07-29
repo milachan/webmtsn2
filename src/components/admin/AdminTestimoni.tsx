@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Icon from '@/components/ui/Icon';
 import AdminFormModal from './AdminFormModal';
+import { showToast } from '@/lib/toastStore';
 import {
   useStoreData, getTestimoni, addTestimoni, updateTestimoni, deleteTestimoni, generateId,
   Testimoni,
@@ -50,9 +51,11 @@ export default function AdminTestimoni() {
     setModalOpen(true);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     if (confirm('Yakin ingin menghapus testimoni ini?')) {
-      deleteTestimoni(id);
+      const ok = await deleteTestimoni(id);
+      if (ok) showToast('Testimoni berhasil dihapus! ✅', 'success');
+      else showToast('Gagal menghapus testimoni!', 'error');
     }
   };
 
@@ -79,8 +82,19 @@ export default function AdminTestimoni() {
               </button>
             </div>
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center text-white text-sm font-bold">
-                {item.name.charAt(0)}
+              <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shrink-0">
+                {item.avatar ? (
+                  <img
+                    src={item.avatar}
+                    alt={item.name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
+                  />
+                ) : (
+                  <span className="text-white text-sm font-bold">{item.name.charAt(0)}</span>
+                )}
               </div>
               <div>
                 <p className="font-medium text-sm text-gray-900 dark:text-dark-text">{item.name}</p>

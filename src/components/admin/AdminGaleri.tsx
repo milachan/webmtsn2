@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Icon from '@/components/ui/Icon';
 import AdminFormModal from './AdminFormModal';
+import { showToast } from '@/lib/toastStore';
 import {
   useStoreData, getGaleri, addGaleri, updateGaleri, deleteGaleri, generateId,
   GaleriItem,
@@ -48,9 +49,11 @@ export default function AdminGaleri() {
     setModalOpen(true);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     if (confirm('Yakin ingin menghapus foto ini?')) {
-      deleteGaleri(id);
+      const ok = await deleteGaleri(id);
+      if (ok) showToast('Foto berhasil dihapus! ✅', 'success');
+      else showToast('Gagal menghapus foto!', 'error');
     }
   };
 
@@ -70,8 +73,22 @@ export default function AdminGaleri() {
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
         {items.map((item) => (
           <div key={item.id} className="relative group bg-white dark:bg-dark-card rounded-xl border border-gray-100 dark:border-dark-border overflow-hidden hover:border-emerald-200 dark:hover:border-emerald-800 transition-all">
-            <div className="aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-200 dark:from-dark-bg dark:to-dark-border flex items-center justify-center">
-              <Icon name="image" size={32} className="text-gray-300 dark:text-gray-600" />
+            <div className="aspect-[4/3] overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 dark:from-dark-bg dark:to-dark-border flex items-center justify-center">
+              {item.image ? (
+                <>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
+                  />
+                </>
+              ) : (
+                <Icon name="image" size={32} className="text-gray-300 dark:text-gray-600" />
+              )}
             </div>
             <div className="p-3">
               <h4 className="font-medium text-xs text-gray-900 dark:text-dark-text line-clamp-1">{item.title}</h4>

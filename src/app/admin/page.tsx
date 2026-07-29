@@ -26,6 +26,7 @@ import AdminTataTertib from '@/components/admin/AdminTataTertib';
 import AdminPesanMasuk from '@/components/admin/AdminPesanMasuk';
 import AdminPmb from '@/components/admin/AdminPmb';
 import AdminLokasi from '@/components/admin/AdminLokasi';
+import ToastContainer from '@/components/ui/Toast';
 
 function AdminContent() {
   const searchParams = useSearchParams();
@@ -63,6 +64,7 @@ function AdminContent() {
   return (
     <AdminLayout activeSection={section}>
       {renderSection()}
+      <ToastContainer />
     </AdminLayout>
   );
 }

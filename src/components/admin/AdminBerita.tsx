@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Icon from '@/components/ui/Icon';
 import AdminFormModal from './AdminFormModal';
+import { showToast } from '@/lib/toastStore';
 import {
   useStoreData, getBerita, addBerita, updateBerita, deleteBerita, generateId,
   Berita,
@@ -53,9 +54,11 @@ export default function AdminBerita() {
     setModalOpen(true);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     if (confirm('Yakin ingin menghapus berita ini?')) {
-      deleteBerita(id);
+      const ok = await deleteBerita(id);
+      if (ok) showToast('Berita berhasil dihapus! ✅', 'success');
+      else showToast('Gagal menghapus berita!', 'error');
     }
   };
 
@@ -85,6 +88,7 @@ export default function AdminBerita() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100 dark:border-dark-border bg-gray-50 dark:bg-dark-bg/50">
+                <th className="text-left px-4 py-3 font-medium text-gray-500 dark:text-dark-text-muted text-xs uppercase tracking-wider">Gambar</th>
                 <th className="text-left px-4 py-3 font-medium text-gray-500 dark:text-dark-text-muted text-xs uppercase tracking-wider">Judul</th>
                 <th className="text-left px-4 py-3 font-medium text-gray-500 dark:text-dark-text-muted text-xs uppercase tracking-wider hidden md:table-cell">Kategori</th>
                 <th className="text-left px-4 py-3 font-medium text-gray-500 dark:text-dark-text-muted text-xs uppercase tracking-wider hidden sm:table-cell">Tanggal</th>
@@ -94,6 +98,22 @@ export default function AdminBerita() {
             <tbody className="divide-y divide-gray-50 dark:divide-dark-border">
               {items.map((item) => (
                 <tr key={item.id} className="hover:bg-gray-50/50 dark:hover:bg-dark-bg/30 transition-colors">
+                  <td className="px-4 py-3.5 w-16">
+                    <div className="w-12 h-9 rounded-lg overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 dark:from-dark-bg dark:to-dark-border flex items-center justify-center">
+                      {item.image ? (
+                        <img
+                          src={item.image}
+                          alt={item.title}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = 'none';
+                          }}
+                        />
+                      ) : (
+                        <Icon name="image" size={14} className="text-gray-300 dark:text-gray-600" />
+                      )}
+                    </div>
+                  </td>
                   <td className="px-4 py-3.5">
                     <p className="font-medium text-gray-900 dark:text-dark-text line-clamp-1">{item.title}</p>
                     <p className="text-xs text-gray-400 dark:text-dark-text-muted mt-0.5 line-clamp-1">{item.excerpt}</p>
@@ -128,7 +148,7 @@ export default function AdminBerita() {
               ))}
               {items.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="text-center py-10 text-gray-400 dark:text-dark-text-muted text-sm">
+                  <td colSpan={5} className="text-center py-10 text-gray-400 dark:text-dark-text-muted text-sm">
                     Belum ada berita. Klik "Tambah Berita" untuk memulai.
                   </td>
                 </tr>

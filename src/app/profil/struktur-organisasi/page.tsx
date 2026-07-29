@@ -29,8 +29,18 @@ export default function StrukturOrganisasiPage() {
             {data.positions.filter(p => p.type === 'kepala').map((kepala) => (
               <ScrollReveal key={kepala.id}>
                 <div className={`bg-gradient-to-br ${kepala.color} rounded-2xl p-6 text-center text-white shadow-xl w-72`}>
-                  <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mx-auto mb-3">
-                    <Icon name={kepala.icon} size={22} />
+                  {/* Photo or icon */}
+                  <div className="w-20 h-20 rounded-full mx-auto mb-3 overflow-hidden ring-4 ring-white/30 bg-white/20 flex items-center justify-center">
+                    {kepala.image ? (
+                      <img
+                        src={kepala.image}
+                        alt={kepala.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                      />
+                    ) : (
+                      <Icon name={kepala.icon} size={28} className="text-white" />
+                    )}
                   </div>
                   <p className="text-xs text-white/70 uppercase tracking-wider">{kepala.level}</p>
                   <p className="font-semibold mt-1">{kepala.name}</p>
@@ -49,8 +59,18 @@ export default function StrukturOrganisasiPage() {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   {data.positions.filter(p => p.type === 'waka').map((item) => (
                     <div key={item.id} className={`bg-gradient-to-br ${item.color} rounded-xl p-4 text-center text-white shadow-lg`}>
-                      <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center mx-auto mb-2">
-                        <Icon name={item.icon} size={18} />
+                      {/* Photo or icon */}
+                      <div className="w-12 h-12 rounded-full mx-auto mb-2 overflow-hidden ring-2 ring-white/30 bg-white/20 flex items-center justify-center">
+                        {item.image ? (
+                          <img
+                            src={item.image}
+                            alt={item.name}
+                            className="w-full h-full object-cover"
+                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                          />
+                        ) : (
+                          <Icon name={item.icon} size={16} className="text-white" />
+                        )}
                       </div>
                       <p className="text-[10px] text-white/70 uppercase tracking-wider">{item.level}</p>
                       <p className="text-sm font-medium mt-1">{item.name}</p>

@@ -251,6 +251,27 @@ export default function AdminSettings() {
       {/* Kepala Madrasah */}
       <section className="bg-white dark:bg-dark-card rounded-2xl border border-gray-100 dark:border-dark-border p-5">
         <h3 className="font-display font-semibold text-base text-gray-900 dark:text-dark-text mb-4">Kepala Madrasah</h3>
+
+        {/* Foto Kepala */}
+        <div className="mb-5 p-4 rounded-xl bg-gray-50 dark:bg-dark-bg border border-gray-100 dark:border-dark-border">
+          <label className="block text-xs font-medium text-gray-500 dark:text-dark-text-muted mb-2">Foto Kepala Madrasah</label>
+          <p className="text-[10px] text-gray-400 mb-3">Upload foto resmi — akan ditampilkan di halaman sambutan dan profil. Biarkan kosong untuk menggunakan ikon default.</p>
+          <ImageUpload
+            value={kepala.image}
+            onChange={(url) => setKepala({ ...kepala, image: url })}
+            width={450}
+            height={600}
+            placeholder="Upload foto kepala madrasah"
+          />
+          {kepala.image && (
+            <div className="mt-3 p-3 rounded-lg bg-white dark:bg-dark-card border border-gray-200 dark:border-dark-border flex items-center gap-4">
+              <p className="text-[10px] font-medium text-gray-400 uppercase shrink-0">Preview:</p>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={kepala.image} alt="Preview foto" className="h-20 w-auto rounded-lg object-cover" />
+            </div>
+          )}
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
             { label: 'Nama', key: 'name', value: kepala.name },
