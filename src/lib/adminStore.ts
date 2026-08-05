@@ -59,11 +59,13 @@ export function useStoreData<T>(getter: () => T): T {
   const lastRef = useRef<T>(data);
 
   useEffect(() => {
+    // Always sync on mount — covers SSR→client hydration gap where the
+    // getter returned the module-level default (same reference) on both
+    // server and client, so a reference-equality check would skip the update.
     const next = getter();
-    if (next !== lastRef.current) {
-      lastRef.current = next;
-      setData(next);
-    }
+    lastRef.current = next;
+    setData(next);
+
     const unsub = subscribe(() => {
       const nextVal = getter();
       if (nextVal !== lastRef.current) {

@@ -67,11 +67,52 @@ export default function HeroSection() {
   const clamp = (v: number, min: number, max: number) => Math.min(Math.max(v, min), max);
   const safe = (v: number) => (typeof v === 'number' && isFinite(v) ? v : 0);
 
-  const yBg = useTransform(scrollY, (v) => safe(clamp(safe(v), 0, 500)) * (150 / 500));
-  const yOrnament1 = useTransform(scrollY, (v) => safe(clamp(safe(v), 0, 500)) * (-80 / 500));
-  const yOrnament2 = useTransform(scrollY, (v) => safe(clamp(safe(v), 0, 500)) * (-120 / 500));
-  const yText = useTransform(scrollY, (v) => safe(clamp(safe(v), 0, 500)) * (20 / 500));
-  const opacity = useTransform(scrollY, (v) => safe(1 - clamp(safe(v), 0, 400) / 400));
+  // Scroll range for the hero → QuickInfoBar handoff transition.
+  // Dynamic = hero height − header height, because QuickInfoBar is sticky right below
+  // the header (top-16 md:top-20). Fade-out and the small ornament parallax finish
+  // exactly when the bar sticks, removing the 'dead zone' of empty screen between the two.
+  const scrollRangeRef = useRef(500);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const mq = window.matchMedia('(min-width: 768px)');
+    const update = () => {
+      const headerOffset = mq.matches ? 80 : 64; // Header h-16 md:h-20
+      scrollRangeRef.current = el.offsetHeight > 0
+        ? Math.max(headerOffset, el.offsetHeight - headerOffset)
+        : 500;
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    mq.addEventListener('change', update);
+    return () => {
+      ro.disconnect();
+      mq.removeEventListener('change', update);
+    };
+  }, []);
+
+  // NOTE: the background layer intentionally has NO scroll transform. Any parallax on
+  // it would make the hero move slower than the page while the QuickInfoBar (sticky,
+  // right below the hero) scrolls at page speed — the speed mismatch at the seam is
+  // what made the bar appear to 'float' upward.
+  const yOrnament1 = useTransform(scrollY, (v) => {
+    const range = scrollRangeRef.current;
+    return safe(clamp(safe(v), 0, range)) * (-80 / range);
+  });
+  const yOrnament2 = useTransform(scrollY, (v) => {
+    const range = scrollRangeRef.current;
+    return safe(clamp(safe(v), 0, range)) * (-120 / range);
+  });
+  const yText = useTransform(scrollY, (v) => {
+    const range = scrollRangeRef.current;
+    return safe(clamp(safe(v), 0, range)) * (20 / range);
+  });
+  const opacity = useTransform(scrollY, (v) => {
+    const range = scrollRangeRef.current;
+    return safe(1 - clamp(safe(v), 0, range) / range);
+  });
   const statsRef = useRef<HTMLDivElement>(null);
   const inView = useInView(statsRef, { once: true, margin: '-50px' });
 
@@ -118,13 +159,11 @@ export default function HeroSection() {
       onMouseEnter={stopAutoPlay}
       onMouseLeave={startAutoPlay}
     >
-      {/* Animated Background Layer */}
-      <motion.div
-        style={{ y: yBg }}
-        className="absolute inset-0 overflow-hidden"
-      >
+      {/* Static Background Layer — no scroll transform so it moves at page speed,
+          matching QuickInfoBar and keeping the hero ↔ bar handoff perfectly seamless */}
+      <div className="absolute inset-0 overflow-hidden">
         <HeroBackground slides={activeSlides} currentIndex={currentIndex} />
-      </motion.div>
+      </div>
 
       {/* Geometric Islamic Ornaments */}
       <motion.div

@@ -31,7 +31,7 @@ const doubledItems = [...items, ...items];
 
 export default function QuickInfoBar() {
   return (
-    <section className="relative bg-white dark:bg-dark-bg border-y border-gray-100 dark:border-dark-border quick-info-bar">
+    <section className="sticky top-16 md:top-20 z-40 bg-white/95 dark:bg-dark-bg/95 backdrop-blur-md border-y border-gray-100 dark:border-dark-border quick-info-bar">
       {/* Subtle background pattern */}
       <div className="absolute inset-0 bg-gradient-to-r from-emerald-50/30 via-transparent to-emerald-50/30 dark:from-emerald-900/5 dark:to-emerald-900/5" />
 

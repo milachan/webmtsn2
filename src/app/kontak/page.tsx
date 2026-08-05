@@ -121,7 +121,7 @@ export default function KontakPage() {
                         placeholder="Tulis pesan Anda..." />
                     </div>
                     {error && (
-                      <div className="text-sm text-red-600 bg-red-50 dark:bg-red-900/20 px-4 py-2 rounded-xl border border-red-200">
+                      <div className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-4 py-2 rounded-xl border border-red-200 dark:border-red-800/50">
                         {error}
                       </div>
                     )}

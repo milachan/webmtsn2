@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Icon from '@/components/ui/Icon';
 import SectionTitle from '@/components/ui/SectionTitle';
@@ -92,16 +92,35 @@ function TiltCard({ item, index }: { item: Fasilitas; index: number }) {
 export default function CarouselFasilitas() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
   const items = useStoreData(getFasilitas);
-  const totalSlides = items.length;
 
-  const scrollTo = (index: number) => {
+  // Hitung jumlah halaman nyata berdasarkan scrollWidth vs clientWidth
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const calc = () => {
+      const pages = el.clientWidth > 0
+        ? Math.round(el.scrollWidth / el.clientWidth)
+        : 1;
+      setTotalPages(Math.max(1, pages));
+      setCurrentIndex((i) => Math.min(i, Math.max(0, pages - 1)));
+    };
+
+    calc();
+    const ro = new ResizeObserver(calc);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [items]);
+
+  const scrollTo = (page: number) => {
     if (!scrollRef.current) return;
-    const target = Math.max(0, Math.min(index, totalSlides - 1));
-    const targetEl = scrollRef.current.querySelector(`[data-slide-index="${target}"]`) as HTMLElement;
-    if (targetEl) {
-      targetEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
-    }
+    const target = Math.max(0, Math.min(page, totalPages - 1));
+    scrollRef.current.scrollTo({
+      left: target * scrollRef.current.clientWidth,
+      behavior: 'smooth',
+    });
     setCurrentIndex(target);
   };
 
@@ -123,7 +142,7 @@ export default function CarouselFasilitas() {
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {items.map((item, index) => (
-              <div key={item.id} data-slide-index={index}>
+              <div key={item.id}>
                 <TiltCard item={item} index={index} />
               </div>
             ))}
@@ -140,9 +159,9 @@ export default function CarouselFasilitas() {
               <Icon name="chevron-left" size={18} />
             </button>
 
-            {/* Dots — all items, each works reliably via scrollIntoView */}
+            {/* Dots — berbasis halaman nyata, bukan jumlah item */}
             <div className="flex items-center gap-2">
-              {Array.from({ length: totalSlides }).map((_, i) => (
+              {Array.from({ length: totalPages }).map((_, i) => (
                 <button
                   key={i}
                   onClick={() => scrollTo(i)}
@@ -151,14 +170,14 @@ export default function CarouselFasilitas() {
                       ? 'bg-emerald-600 dark:bg-emerald-400 w-6'
                       : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 w-2'
                   }`}
-                  aria-label={`Slide ${i + 1}`}
+                  aria-label={`Halaman ${i + 1}`}
                 />
               ))}
             </div>
 
             <button
               onClick={next}
-              disabled={currentIndex >= totalSlides - 1}
+              disabled={currentIndex >= totalPages - 1}
               className="p-3 rounded-xl bg-gray-100 dark:bg-dark-card hover:bg-gray-200 dark:hover:bg-dark-border text-gray-600 dark:text-dark-text-muted transition-all hover:translate-x-0.5 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:translate-x-0"
               aria-label="Selanjutnya"
             >

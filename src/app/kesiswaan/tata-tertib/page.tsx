@@ -14,7 +14,7 @@ export default function TataTertibPage() {
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'60\' height=\'60\' viewBox=\'0 0 60 60\'%3E%3Cpath d=\'M30 2L58 30L30 58L2 30Z\' fill=\'none\' stroke=\'white\' stroke-width=\'0.5\'/%3E%3C/svg%3E")' }} />
         <div className="relative z-10 max-w-8xl 2xl:max-w-9xl mx-auto px-4 sm:px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <Link href="/kesiswaan" className="inline-flex items-center gap-2 text-white/75 hover:text-white mb-4 transition-colors text-sm">
+            <Link href="/kesiswaan" className="inline-flex items-center gap-2 text-white/90 hover:text-white mb-4 transition-colors text-sm">
               <Icon name="chevron-left" size={16} /> Kembali ke Kesiswaan
             </Link>
             <h1 className="text-fluid-hero font-bold text-white mb-3">Tata Tertib</h1>
@@ -51,10 +51,10 @@ export default function TataTertibPage() {
           <ScrollReveal delay={0.2} className="mt-8">
             <div className="bg-amber-50 dark:bg-amber-900/10 rounded-xl p-6 border border-amber-200 dark:border-amber-800/30">
               <div className="flex items-start gap-3">
-                <Icon name="alert-circle" size={20} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                <Icon name="alert-circle" size={20} className="text-amber-700 dark:text-amber-400 shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="font-semibold text-amber-800 dark:text-amber-300 mb-1">Sanksi Pelanggaran</h3>
-                  <p className="text-sm text-amber-700 dark:text-amber-200/80">{tataTertib.sanksi}</p>
+                  <h3 className="font-semibold text-amber-900 dark:text-amber-300 mb-1">Sanksi Pelanggaran</h3>
+                  <p className="text-sm text-amber-800 dark:text-amber-200/80">{tataTertib.sanksi}</p>
                 </div>
               </div>
             </div>

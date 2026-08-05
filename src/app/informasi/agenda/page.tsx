@@ -25,7 +25,7 @@ export default function AgendaPage() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
         <div className="relative z-10 max-w-8xl 2xl:max-w-9xl mx-auto px-4 sm:px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <Link href="/informasi" className="inline-flex items-center gap-2 text-white/75 hover:text-white mb-4 transition-colors text-sm group">
+            <Link href="/informasi" className="inline-flex items-center gap-2 text-white/90 hover:text-white mb-4 transition-colors text-sm group">
               <Icon name="chevron-left" size={16} className="group-hover:-translate-x-1 transition-transform" /> Kembali ke Informasi
             </Link>
             <h1 className="text-fluid-hero font-bold text-white mb-3">Agenda</h1>
@@ -83,7 +83,7 @@ export default function AgendaPage() {
           </div>
 
           {agenda.length === 0 && (
-            <div className="text-center py-16 text-gray-400">
+            <div className="text-center py-16 text-gray-500">
               <Icon name="calendar" size={40} className="mx-auto mb-3 opacity-50" />
               <p className="text-sm">Belum ada agenda</p>
             </div>

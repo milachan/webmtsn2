@@ -261,6 +261,9 @@ export default function AdminSettings() {
             onChange={(url) => setKepala({ ...kepala, image: url })}
             width={450}
             height={600}
+            enableCrop
+            minSourceWidth={800}
+            minSourceHeight={1000}
             placeholder="Upload foto kepala madrasah"
           />
           {kepala.image && (

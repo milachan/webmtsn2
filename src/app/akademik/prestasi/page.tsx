@@ -67,8 +67,10 @@ export default function PrestasiPage() {
   const [filterTingkat, setFilterTingkat] = useState<string>('Semua');
 
   const tingkatList = useMemo(() => {
-    const set = new Set(prestasiData.map((p) => p.tingkat));
-    return ['Semua', ...Array.from(set)];
+    const fixedOrder = ['Semua', 'Kabupaten', 'Provinsi', 'Nasional'];
+    const extras = Array.from(new Set(prestasiData.map((p) => p.tingkat)))
+      .filter((t) => !fixedOrder.includes(t));
+    return [...fixedOrder, ...extras];
   }, [prestasiData]);
 
   const filtered = filterTingkat === 'Semua'
@@ -87,7 +89,7 @@ export default function PrestasiPage() {
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'60\' height=\'60\' viewBox=\'0 0 60 60\'%3E%3Cpath d=\'M30 2L58 30L30 58L2 30Z\' fill=\'none\' stroke=\'white\' stroke-width=\'0.5\'/%3E%3C/svg%3E")' }} />
         <div className="relative z-10 max-w-8xl 2xl:max-w-9xl mx-auto px-4 sm:px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <Link href="/akademik" className="inline-flex items-center gap-2 text-white/75 hover:text-white mb-4 transition-colors text-sm group">
+            <Link href="/akademik" className="inline-flex items-center gap-2 text-white/90 hover:text-white mb-4 transition-colors text-sm group">
               <Icon name="chevron-left" size={16} className="group-hover:-translate-x-1 transition-transform" /> Kembali ke Akademik
             </Link>
             <h1 className="text-fluid-hero font-bold text-white mb-3">Prestasi</h1>
@@ -144,7 +146,7 @@ export default function PrestasiPage() {
           </div>
 
           {/* Achievement cards */}
-          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <StaggerContainer key={filterTingkat} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map((item) => {
               const style = tingkatStyles[item.tingkat] || tingkatStyles['Kabupaten'];
               const bidangIcon = bidangIcons[item.bidang] || 'star';

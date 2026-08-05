@@ -20,7 +20,7 @@ export default function PetaLokasi() {
           <ScrollReveal direction="left" className="lg:col-span-2">
             <div className="relative rounded-2xl overflow-hidden shadow-xl h-[400px] lg:h-[450px] bg-gray-200 dark:bg-dark-card border border-gray-100 dark:border-dark-border">
               <iframe
-                src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1000!2d${schoolData.coordinates.lng}!3d${schoolData.coordinates.lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zN8KwNDAnNTUuMiJTIDEwOcKwNDAnNDAuOCJF!5e0!3m2!1sid!2sid!4v1`}
+                src={`https://maps.google.com/maps?q=${schoolData.coordinates.lat},${schoolData.coordinates.lng}&z=17&output=embed`}
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
@@ -30,12 +30,6 @@ export default function PetaLokasi() {
                 title="Lokasi MTs Negeri 2 Kebumen"
                 className="grayscale hover:grayscale-0 transition-all duration-500"
               />
-              {/* Custom marker overlay */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-                <div className="w-8 h-8 bg-emerald-600 rounded-full flex items-center justify-center shadow-xl shadow-emerald-900/50 animate-bounce-gentle">
-                  <Icon name="map-pin" size={16} className="text-white" />
-                </div>
-              </div>
             </div>
           </ScrollReveal>
 

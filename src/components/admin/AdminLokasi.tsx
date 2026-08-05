@@ -15,6 +15,12 @@ export default function AdminLokasi() {
 
   useEffect(() => { setSchool(storeSchool); }, [storeSchool]);
 
+  // Reload preview whenever coordinates change
+  useEffect(() => {
+    setMapError(true);
+    setMapKey((k) => k + 1);
+  }, [school.coordinates.lat, school.coordinates.lng]);
+
   const handleSave = async () => {
     setSaveStatus('saving');
     setSaveMessage('');
@@ -40,7 +46,7 @@ export default function AdminLokasi() {
 
   const lat = school.coordinates.lat;
   const lng = school.coordinates.lng;
-  const mapSrc = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1000!2d${lng}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zN8KwNDAnNTUuMiJTIDEwOcKwNDAnNDAuOCJF!5e0!3m2!1sid!2sid!4v1`;
+  const mapSrc = `https://maps.google.com/maps?q=${lat},${lng}&z=17&output=embed`;
 
   return (
     <div className="space-y-6">
@@ -235,7 +241,7 @@ export default function AdminLokasi() {
                 </p>
                 <div className="flex items-center gap-3 mt-4">
                   <button
-                    onClick={() => { setMapError(false); setMapKey((k) => k + 1); }}
+                    onClick={() => { setMapError(true); setMapKey((k) => k + 1); }}
                     className="text-xs px-3 py-1.5 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors pointer-events-auto"
                   >
                     Muat Ulang Peta
@@ -265,7 +271,6 @@ export default function AdminLokasi() {
                 className={`w-full transition-opacity duration-300 ${
                   mapError ? 'opacity-0 absolute inset-0' : 'opacity-100'
                 }`}
-                sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
                 onLoad={() => setMapError(false)}
                 onError={() => setMapError(true)}
               />

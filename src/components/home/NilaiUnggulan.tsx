@@ -12,7 +12,7 @@ export default function NilaiUnggulan() {
   const others = nilaiUnggulan.filter((n) => !n.highlight);
 
   return (
-    <section className="py-20 bg-white dark:bg-dark-bg">
+    <section className="py-10 bg-white dark:bg-dark-bg">
       <div className="max-w-8xl 2xl:max-w-9xl mx-auto px-4 sm:px-6">
         <SectionTitle
           title="Nilai Unggulan Madrasah"

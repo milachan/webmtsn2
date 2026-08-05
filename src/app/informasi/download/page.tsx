@@ -31,7 +31,7 @@ export default function DownloadPage() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
         <div className="relative z-10 max-w-8xl 2xl:max-w-9xl mx-auto px-4 sm:px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <Link href="/informasi" className="inline-flex items-center gap-2 text-white/60 hover:text-white mb-4 transition-colors text-sm">
+            <Link href="/informasi" className="inline-flex items-center gap-2 text-white/90 hover:text-white mb-4 transition-colors text-sm">
               <Icon name="chevron-left" size={16} /> Kembali ke Informasi
             </Link>
             <h1 className="text-fluid-hero font-bold text-white mb-3">Download Dokumen</h1>
@@ -75,7 +75,7 @@ export default function DownloadPage() {
           </div>
 
           {/* Download list */}
-          <StaggerContainer className="space-y-3">
+          <StaggerContainer key={`${filter}-${search}`} className="space-y-3">
             {filtered.map((doc) => {
               const grad = categoryColors[doc.category] || 'from-emerald-500 to-emerald-700';
               return (
@@ -95,7 +95,7 @@ export default function DownloadPage() {
                       <p className="text-sm text-gray-500 dark:text-dark-text-muted truncate">{doc.description}</p>
                     </div>
                     <div className="flex items-center gap-3 shrink-0">
-                      <span className="text-xs text-gray-400 dark:text-gray-500">{doc.fileSize}</span>
+                      <span className="text-xs text-gray-500 dark:text-gray-500">{doc.fileSize}</span>
                       <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 text-xs font-medium group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/30 transition-colors">
                         <Icon name="arrow-down" size={14} />
                         Unduh

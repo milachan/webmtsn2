@@ -83,14 +83,14 @@ export default function StatsSection() {
                     className="text-emerald-600 dark:text-emerald-400"
                   />
                 </div>
-                <p className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-dark-text">
+                <p className="text-3xl lg:text-4xl font-bold text-white dark:text-dark-text">
                   <AnimatedCounterValue
                     value={stat.value}
                     suffix={stat.suffix || ''}
                     play={isInView}
                   />
                 </p>
-                <p className="text-sm text-gray-300 dark:text-dark-text-muted mt-1">
+                <p className="text-sm text-emerald-100 dark:text-dark-text-muted mt-1">
                   {stat.label}
                 </p>
               </motion.div>
