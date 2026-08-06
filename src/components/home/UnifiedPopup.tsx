@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Icon from '@/components/ui/Icon';
 import { getGradientColor } from '@/lib/data';
 import { useStoreData, getBerita, getPengumuman, getPopupEnabled } from '@/lib/adminStore';
+import { beritaLink } from '@/lib/berita';
 
 const POPUP_SEEN_KEY = 'mtsn-popup-seen';
 
@@ -229,7 +230,7 @@ export default function UnifiedPopup() {
                                 {slideItems.map((item, idx) => (
                                   <Link
                                     key={item.id}
-                                    href={`/informasi/berita/${item.slug}`}
+                                    href={beritaLink(item.slug)}
                                     onClick={handleClose}
                                     className={`group flex items-center gap-4 p-4 transition-all duration-300 hover:bg-emerald-50/50 dark:hover:bg-emerald-900/10 ${idx === 0 ? 'rounded-t-2xl' : ''} ${idx === slideItems.length - 1 ? 'rounded-b-2xl' : ''}`}
                                   >
@@ -375,7 +376,7 @@ export default function UnifiedPopup() {
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                   {activeTab === 'berita' ? (
                     <Link
-                      href="/informasi/berita"
+                      href={beritaLink()}
                       onClick={handleClose}
                       className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white text-sm font-medium rounded-xl hover:from-emerald-500 hover:to-emerald-600 transition-all duration-300 shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/30"
                     >

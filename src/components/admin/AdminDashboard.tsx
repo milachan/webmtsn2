@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Icon from '@/components/ui/Icon';
 import {
   useStoreData,
-  getBerita, getPengumuman, getAgenda, getFasilitas,
+  getPengumuman, getAgenda, getFasilitas,
   getGuru, getEkstrakurikuler, getGaleri, getTestimoni,
   getSejarah, getProgramUnggulan, getNilaiUnggulan, getPrestasi, resetAllData,
 } from '@/lib/adminStore';
@@ -20,8 +20,8 @@ interface StatCard {
 
 function useStats(): StatCard[] {
   // useStoreData ensures stats recalculate whenever any store data changes
+  // Catatan: Berita tidak lagi dikelola di panel ini — dikelola di portal web berita.
   return useStoreData(() => [
-    { label: 'Berita', count: getBerita().length, icon: 'book-open', color: 'emerald', section: 'berita' },
     { label: 'Pengumuman', count: getPengumuman().length, icon: 'bell', color: 'amber', section: 'pengumuman' },
     { label: 'Agenda', count: getAgenda().length, icon: 'calendar', color: 'blue', section: 'agenda' },
     { label: 'Fasilitas', count: getFasilitas().length, icon: 'building-2', color: 'teal', section: 'fasilitas' },

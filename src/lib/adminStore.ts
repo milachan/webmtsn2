@@ -122,6 +122,15 @@ async function apiGet<T>(table: string): Promise<T[]> {
   return res.json();
 }
 
+async function apiFetch<T>(path: string): Promise<T[]> {
+  const res = await fetch(path, { cache: 'no-store' });
+  if (!res.ok) {
+    console.warn(`[apiFetch/${path}] HTTP ${res.status} — returning empty array`);
+    return [];
+  }
+  return res.json();
+}
+
 async function apiPost<T>(table: string, data: unknown): Promise<T | null> {
   const res = await fetch(`${API_BASE}/${table}`, {
     method: 'POST',
@@ -205,7 +214,7 @@ export async function loadAllData(): Promise<void> {
   loadingPromise = (async () => {
     try {
       const tables = [
-        'berita', 'galeri', 'testimoni', 'fasilitas',
+        'galeri', 'testimoni', 'fasilitas',
         'ekstrakurikuler', 'guru', 'pengumuman', 'agenda',
         'sejarah', 'programunggulan', 'nilaiunggulan', 'prestasi',
       ] as const;
@@ -220,6 +229,15 @@ export async function loadAllData(): Promise<void> {
           }
         })
       );
+
+      // Berita diambil dari portal web berita (bukan DB lokal)
+      try {
+        const res = await fetch('/api/berita-publik', { cache: 'no-store' });
+        const beritaData = res.ok ? await res.json() : [];
+        setCached('berita', Array.isArray(beritaData) ? beritaData : []);
+      } catch {
+        setCached('berita', []);
+      }
 
       try {
         const settings = await apiGetSettings();
@@ -271,13 +289,15 @@ export async function loadAllData(): Promise<void> {
 function createCrud<T extends { id: number }>(
   cacheKey: string,
   getDefaults: () => T[],
+  readPath?: string, // custom endpoint untuk baca (mis. /api/berita-publik)
+  readOnly = false, // true = mutasi (tambah/ubah/hapus) ditolak — data sumber eksternal
 ) {
   return {
     getAll: (): T[] => getCached<T[]>(cacheKey, getDefaults()),
 
     getAllAsync: async (): Promise<T[]> => {
       try {
-        const data = await apiGet<T>(cacheKey);
+        const data = await apiFetch<T>(readPath || `${API_BASE}/${cacheKey}`);
         setCached(cacheKey, data);
         return data;
       } catch {
@@ -286,6 +306,10 @@ function createCrud<T extends { id: number }>(
     },
 
     add: async (item: T): Promise<boolean> => {
+      if (readOnly) {
+        console.warn(`[createCrud/${cacheKey}] read-only — tambah data ditolak`);
+        return false;
+      }
       const created = await apiPost<T>(cacheKey, item);
       if (created) {
         const newItems = [...getCached<T[]>(cacheKey, getDefaults()), created];
@@ -297,6 +321,10 @@ function createCrud<T extends { id: number }>(
     },
 
     update: async (id: number, data: Partial<T>): Promise<boolean> => {
+      if (readOnly) {
+        console.warn(`[createCrud/${cacheKey}] read-only — ubah data ditolak`);
+        return false;
+      }
       const updated = await apiPut<T>(cacheKey, id, data);
       if (updated) {
         const items = getCached<T[]>(cacheKey, getDefaults());
@@ -311,6 +339,10 @@ function createCrud<T extends { id: number }>(
     },
 
     remove: async (id: number): Promise<boolean> => {
+      if (readOnly) {
+        console.warn(`[createCrud/${cacheKey}] read-only — hapus data ditolak`);
+        return false;
+      }
       const ok = await apiDelete(cacheKey, id);
       if (ok) {
         const items = getCached<T[]>(cacheKey, getDefaults());
@@ -331,9 +363,12 @@ function createCrud<T extends { id: number }>(
 }
 
 // ===== Create store instances =====
+// Berita dibaca dari portal web berita (route proxy /api/berita-publik),
+// bukan dari database lokal — upload & kelola berita dilakukan di web berita.
+// readOnly=true: mutasi lewat store ini ditolak (sumber data eksternal).
 const beritaCrud = createCrud<Berita>('berita', () => {
   try { return require('./data').beritaTerbaru || []; } catch { return []; }
-});
+}, '/api/berita-publik', true);
 const galeriCrud = createCrud<GaleriItem>('galeri', () => {
   try { return require('./data').galeriFoto || []; } catch { return []; }
 });
@@ -580,8 +615,9 @@ export async function savePmbSettings(data: PmbSettings): Promise<boolean> {
 
 // ===== Reset All =====
 export async function resetAllData(): Promise<void> {
+  // 'berita' sengaja dikecualikan — sumber datanya portal web berita (bukan DB lokal)
   const tableNames = [
-    'berita', 'galeri', 'testimoni', 'fasilitas',
+    'galeri', 'testimoni', 'fasilitas',
     'ekstrakurikuler', 'guru', 'pengumuman', 'agenda',
     'sejarah', 'programunggulan', 'nilaiunggulan', 'prestasi',
   ];

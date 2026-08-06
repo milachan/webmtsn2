@@ -9,6 +9,7 @@ import Icon from '@/components/ui/Icon';
 import Link from 'next/link';
 import { getGradientColor } from '@/lib/data';
 import { useStoreData, getBerita } from '@/lib/adminStore';
+import { beritaLink } from '@/lib/berita';
 
 export default function BeritaTerbaru() {
   const beritaList = useStoreData(getBerita);
@@ -23,7 +24,7 @@ export default function BeritaTerbaru() {
         <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
           {beritaList.slice(0, 6).map((berita) => (
             <StaggerItem key={berita.id}>
-              <Link href={`/informasi/berita/${berita.slug}`}>
+              <Link href={beritaLink(berita.slug)}>
                 <Card hover="lift" className="group h-full">
                   {/* Image */}
                   <div className={`relative h-48 overflow-hidden bg-gradient-to-br ${getGradientColor(berita.id)}`}>
@@ -73,7 +74,7 @@ export default function BeritaTerbaru() {
         </StaggerContainer>
 
         <ScrollReveal className="text-center mt-10">
-          <Link href="/informasi/berita">
+          <Link href={beritaLink()}>
             <Button variant="outline" size="lg">
               Lihat Semua Berita
               <Icon name="arrow-right" size={18} />

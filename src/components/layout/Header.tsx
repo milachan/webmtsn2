@@ -8,6 +8,7 @@ import Icon from '@/components/ui/Icon';
 import MobileMenu from './MobileMenu';
 import SearchModal from './SearchModal';
 import { useStoreData, getSchoolData } from '@/lib/adminStore';
+import { beritaLink } from '@/lib/berita';
 
 const navItems = [
   { label: 'Beranda', href: '/' },
@@ -46,7 +47,7 @@ const navItems = [
     href: '/informasi',
     children: [
       { label: 'Pengumuman', href: '/informasi/pengumuman' },
-      { label: 'Berita', href: '/informasi/berita' },
+      { label: 'Berita', href: beritaLink() },
       { label: 'Agenda', href: '/informasi/agenda' },
       { label: 'Galeri', href: '/informasi/galeri' },
       { label: 'Download', href: '/informasi/download' },

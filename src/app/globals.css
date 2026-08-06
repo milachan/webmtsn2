@@ -303,6 +303,7 @@ h2 { font-size: clamp(24px, 3.5vw, 40px); }
 h3 { font-size: clamp(20px, 2.5vw, 28px); }
 p { font-size: clamp(14px, 1.2vw, 16px); line-height: 1.7; }
 
+
 /* ===== Info Ticker Auto-Scroll ===== */
 @keyframes info-scroll {
   0% { transform: translateX(0); }

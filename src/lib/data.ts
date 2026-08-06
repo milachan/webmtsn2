@@ -8,6 +8,10 @@ export interface Berita {
   category: string;
   image: string;
   slug: string;
+  // Field opsional yang tersedia dari portal web berita (via /api/berita-publik)
+  content?: string;
+  author?: string;
+  views?: number;
 }
 
 export interface GaleriItem {

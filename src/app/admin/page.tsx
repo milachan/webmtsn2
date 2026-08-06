@@ -4,7 +4,6 @@ import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import AdminDashboard from '@/components/admin/AdminDashboard';
-import AdminBerita from '@/components/admin/AdminBerita';
 import AdminPengumuman from '@/components/admin/AdminPengumuman';
 import AdminAgenda from '@/components/admin/AdminAgenda';
 import AdminFasilitas from '@/components/admin/AdminFasilitas';
@@ -35,7 +34,7 @@ function AdminContent() {
 
   const renderSection = () => {
     switch (section) {
-      case 'berita': return <AdminBerita />;
+      // Berita dikelola di portal web berita (lihat /api/berita-publik)
       case 'pengumuman': return <AdminPengumuman />;
       case 'agenda': return <AdminAgenda />;
       case 'fasilitas': return <AdminFasilitas />;

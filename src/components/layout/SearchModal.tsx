@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Icon from '@/components/ui/Icon';
 import { getBerita, getPengumuman, getAgenda } from '@/lib/adminStore';
+import { beritaLink } from '@/lib/berita';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -46,7 +47,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
     getBerita().forEach((berita) => {
       if (berita.title.toLowerCase().includes(lower) || berita.excerpt.toLowerCase().includes(lower)) {
-        allResults.push({ title: berita.title, description: berita.excerpt, href: `/informasi/berita/${berita.slug}`, category: 'Berita' });
+        allResults.push({ title: berita.title, description: berita.excerpt, href: beritaLink(berita.slug), category: 'Berita' });
       }
     });
 

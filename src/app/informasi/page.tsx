@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Icon from '@/components/ui/Icon';
+import { beritaLink } from '@/lib/berita';
 
 export default function InformasiPage() {
   return (
@@ -32,7 +33,7 @@ export default function InformasiPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {[
               { href: '/informasi/pengumuman', label: 'Pengumuman', icon: 'info', desc: 'Pengumuman resmi madrasah', color: 'from-amber-500 to-amber-700', gradient: 'from-amber-50 to-amber-100 dark:from-amber-500/10 dark:to-amber-600/5' },
-              { href: '/informasi/berita', label: 'Berita', icon: 'book-open', desc: 'Berita dan artikel terbaru seputar kegiatan madrasah', color: 'from-emerald-500 to-emerald-700', gradient: 'from-emerald-50 to-emerald-100 dark:from-emerald-500/10 dark:to-emerald-600/5' },
+              { href: beritaLink(), label: 'Berita', icon: 'book-open', desc: 'Berita dan artikel terbaru seputar kegiatan madrasah — dibuka di Portal Berita', color: 'from-emerald-500 to-emerald-700', gradient: 'from-emerald-50 to-emerald-100 dark:from-emerald-500/10 dark:to-emerald-600/5' },
               { href: '/informasi/agenda', label: 'Agenda', icon: 'calendar', desc: 'Jadwal kegiatan dan acara madrasah', color: 'from-blue-500 to-blue-700', gradient: 'from-blue-50 to-blue-100 dark:from-blue-500/10 dark:to-blue-600/5' },
               { href: '/informasi/galeri', label: 'Galeri', icon: 'image', desc: 'Dokumentasi foto kegiatan madrasah', color: 'from-purple-500 to-purple-700', gradient: 'from-purple-50 to-purple-100 dark:from-purple-500/10 dark:to-purple-600/5' },
               { href: '/informasi/download', label: 'Download', icon: 'arrow-down', desc: 'Unduh dokumen-dokumen penting madrasah', color: 'from-rose-500 to-rose-700', gradient: 'from-rose-50 to-rose-100 dark:from-rose-500/10 dark:to-rose-600/5' },

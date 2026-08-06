@@ -13,6 +13,7 @@ interface SidebarItem {
   label?: string;
   icon?: string;
   items?: SidebarItem[];
+  note?: string; // teks kecil di bawah grup (info tambahan)
 }
 
 const sidebarGroups: SidebarItem[] = [
@@ -34,9 +35,8 @@ const sidebarGroups: SidebarItem[] = [
     { type: 'link', id: 'pembiasaan', label: 'Pembiasaan', icon: 'sun' },
     { type: 'link', id: 'tatatertib', label: 'Tata Tertib', icon: 'file-text' },
   ]},
-  { type: 'group', label: 'Informasi & Kontak', items: [
+  { type: 'group', label: 'Informasi & Kontak', note: 'Berita dikelola di Portal Berita', items: [
     { type: 'link', id: 'pengumuman', label: 'Pengumuman', icon: 'bell' },
-    { type: 'link', id: 'berita', label: 'Berita', icon: 'book-open' },
     { type: 'link', id: 'agenda', label: 'Agenda', icon: 'calendar' },
     { type: 'link', id: 'galeri', label: 'Galeri', icon: 'image' },
     { type: 'link', id: 'pesanmasuk', label: 'Pesan Masuk', icon: 'inbox' },
@@ -192,6 +192,11 @@ export default function AdminLayout({ children, activeSection }: { children: Rea
                     </Link>
                   );
                 })}
+                {group.note && (
+                  <p className="px-4 pt-2 pb-1 text-[10px] italic text-gray-400 dark:text-dark-text-muted">
+                    {group.note}
+                  </p>
+                )}
               </div>
             );
           })}

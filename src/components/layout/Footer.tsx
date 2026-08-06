@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Icon from '@/components/ui/Icon';
 import { useStoreData, getSchoolData, getSocialLinks } from '@/lib/adminStore';
+import { beritaLink } from '@/lib/berita';
 
 const quickLinks = [
   { label: 'Profil Madrasah', href: '/profil' },
@@ -21,7 +22,7 @@ const programLinks = [
 ];
 
 const infoLinks = [
-  { label: 'Berita', href: '/informasi/berita' },
+  { label: 'Berita', href: beritaLink() },
   { label: 'Pengumuman', href: '/informasi/pengumuman' },
   { label: 'Agenda', href: '/informasi/agenda' },
   { label: 'Galeri', href: '/informasi/galeri' },
